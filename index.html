@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Be a Goalkeeper</title>
+<meta name="description" content="A goalkeeper career game for Android. Read the striker, make the save, and live with the call. Five kinds of chances, a commentator who actually watched, and a story worth the next match.">
+<meta name="theme-color" content="#060d1a">
+<meta property="og:title" content="Be a Goalkeeper">
+<meta property="og:description" content="You are only the goalkeeper. Every save is yours to make.">
+<meta property="og:image" content="assets/hero.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=Silkscreen:wght@400;700&display=swap">
+<style>
+  /* Satu dunia visual saja: stadion malam, seperti splash game. Tidak ada tema
+     terang — warnanya dicat eksplisit supaya halaman berdiri di latar apa pun. */
+  :root {
+    color-scheme: dark;
+    --night: #060d1a;
+    --navy: #0b1a31;
+    --panel: #10264a;
+    --panel-2: #0d203e;
+    --line: #1d3a66;
+    --cyan: #35d0ff;
+    --cyan-dim: #1e7fa3;
+    --save: #fad10a;
+    --grass: #1d8a4a;
+    --ink: #eef3fa;
+    --muted: #9fb0c8;
+    --faint: #6f83a3;
+    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+    --pixel: "Silkscreen", "Courier New", monospace;
+    --wrap: min(1140px, 100% - 32px);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--ink);
+    font: 400 17px/1.65 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--save); outline-offset: 3px; border-radius: 4px; }
+
+  .wrap { width: var(--wrap); margin-inline: auto; }
+
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: .95; }
+  h2 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: .005em; }
+  h3 { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; }
+  p { margin: 0; }
+  .lede { color: var(--muted); max-width: 62ch; font-size: 1.08rem; }
+
+  .tag {
+    font: 700 .72rem/1 var(--pixel);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  section { padding-block: clamp(72px, 10vw, 120px); }
+  .head { display: grid; gap: 16px; margin-bottom: 44px; }
+
+  /* ── Navigasi ─────────────────────────────────────────── */
+  .nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: rgba(6, 13, 26, .86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; gap: 20px; min-height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: 34px; height: 34px; border-radius: 8px; }
+  .brand span { font: 900 1.15rem/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .links { display: flex; gap: 22px; margin-left: auto; }
+  .links a { text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--muted); }
+  .links a:hover { color: var(--ink); }
+  .lang {
+    display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden;
+  }
+  .lang button {
+    font: 700 .7rem/1 var(--pixel); letter-spacing: .1em; background: none; color: var(--faint);
+    border: 0; padding: 9px 11px; cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--cyan); color: var(--night); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; padding: 12px 22px; border-radius: 10px;
+    font: 700 .95rem/1 var(--body); letter-spacing: .02em; text-decoration: none;
+    border: 2px solid var(--cyan); color: var(--ink); background: transparent; cursor: pointer;
+    transition: transform .15s, background .15s, color .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.primary { background: var(--save); border-color: var(--save); color: #1b1600; }
+  .btn.small { min-height: 40px; padding: 9px 16px; font-size: .88rem; }
+  .nav .btn { margin-left: 4px; }
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(40px, 7vw, 90px) 0;
+    background:
+      radial-gradient(60% 50% at 78% 20%, rgba(53, 208, 255, .16), transparent 70%),
+      radial-gradient(40% 30% at 12% 8%, rgba(250, 209, 10, .08), transparent 70%),
+      linear-gradient(180deg, #060d1a 0%, #0a1830 70%, #0b2a24 100%);
+  }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 5vw, 64px); align-items: end; }
+  .hero-text { padding-bottom: clamp(40px, 7vw, 96px); display: grid; gap: 22px; }
+  .hero-logo { width: min(460px, 100%); filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .5)); }
+  .hero h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .claim { font: 800 clamp(1.7rem, 3.4vw, 2.5rem)/1.05 var(--display); text-transform: uppercase; }
+  .claim em { font-style: normal; color: var(--save); }
+  .hero .lede { color: #c6d3e6; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .facts span {
+    font: 700 .68rem/1 var(--pixel); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px;
+  }
+  .hero-art {
+    position: relative;
+    align-self: stretch;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .hero-art img {
+    width: min(420px, 100%);
+    /* Splash 9:16 penuh membuat hero lebih tinggi dari layar mana pun; yang
+       dipertahankan bagian atasnya — kiper, bulan, dan layar raksasa. */
+    max-height: min(78vh, 640px);
+    object-fit: cover;
+    object-position: top;
+    border-radius: 22px 22px 0 0;
+    border: 2px solid var(--line); border-bottom: 0;
+    box-shadow: 0 0 0 6px rgba(53, 208, 255, .07), 0 30px 80px rgba(0, 0, 0, .6);
+  }
+  .scorebug {
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; white-space: nowrap;
+    background: rgba(8, 20, 40, .9); border: 2px solid var(--cyan); border-radius: 10px;
+    padding: 8px 14px; font: 700 .72rem/1 var(--pixel); letter-spacing: .08em;
+    box-shadow: 0 0 24px rgba(53, 208, 255, .35);
+  }
+  .scorebug b { color: var(--save); font-size: .95rem; }
+
+  /* ── Siaran: demo ticker komentator ───────────────────── */
+  .broadcast { background: linear-gradient(180deg, #0b2a24 0%, var(--night) 18%); }
+  .broadcast .wrap { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(28px, 6vw, 72px); align-items: center; }
+  .ticker {
+    background: linear-gradient(180deg, #0a1a33, #081428);
+    border: 2px solid var(--line); border-radius: 16px; padding: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+  }
+  .ticker-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 4px 6px 12px; border-bottom: 1px solid var(--line); margin-bottom: 12px;
+    font: 700 .7rem/1 var(--pixel); letter-spacing: .08em; color: var(--muted);
+  }
+  .live { display: inline-flex; align-items: center; gap: 7px; color: #ff6b6b; }
+  .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ff5a5a; box-shadow: 0 0 10px #ff5a5a; }
+  .feed { display: grid; gap: 8px; min-height: 356px; align-content: end; list-style: none; margin: 0; padding: 0; }
+  .card {
+    display: grid; grid-template-columns: 38px 22px 1fr; align-items: center; gap: 10px;
+    background: var(--panel-2); border: 1px solid #1a3358; border-left: 3px solid transparent;
+    border-radius: 8px; padding: 11px 12px;
+    font: 400 .78rem/1.5 var(--pixel); letter-spacing: .04em; text-transform: uppercase; color: #dfe8f5;
+  }
+  .card .min { color: var(--faint); font-size: .68rem; text-align: right; }
+  .card .dot { width: 18px; height: 18px; border-radius: 50%; background: #1d3456; display: grid; place-items: center; }
+  .card .dot::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #5f7aa3; }
+  .card.save { border-left-color: var(--save); color: #fff4c2; }
+  .card.save .dot { background: var(--save); }
+  .card.save .dot::after { background: #3a2f00; }
+  .card.goal { border-left-color: var(--grass); }
+  .card.goal .dot { background: var(--grass); }
+  .card.card-y .dot { background: #f3c318; border-radius: 3px; width: 13px; height: 17px; }
+  .card.card-y .dot::after { display: none; }
+  .card.new { animation: rise .45s ease-out; }
+  @keyframes rise { from { transform: translateY(14px); opacity: .2; } to { transform: none; opacity: 1; } }
+  .quote {
+    margin-top: 26px; padding-left: 18px; border-left: 3px solid var(--save);
+    color: #c6d3e6; font-style: italic;
+  }
+
+  /* ── Lima cara dibobol ────────────────────────────────── */
+  .ways { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .way {
+    display: grid; gap: 12px; align-content: start;
+    background: var(--navy); border: 1px solid var(--line); border-radius: 14px; padding: 20px 18px 22px;
+  }
+  .way .ico {
+    width: 46px; height: 46px; border-radius: 10px; background: var(--panel);
+    display: grid; place-items: center; border: 1px solid var(--cyan-dim);
+  }
+  .way svg { width: 26px; height: 26px; stroke: var(--cyan); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .way h3 { font-size: 1.35rem; }
+  .way p { color: var(--muted); font-size: .95rem; line-height: 1.55; }
+  .way .q { font: 700 .66rem/1.5 var(--pixel); letter-spacing: .06em; color: var(--save); text-transform: uppercase; }
+  .read {
+    margin-top: 40px; display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+    background: linear-gradient(90deg, var(--panel), transparent); border-radius: 16px; padding: 22px 26px;
+    border: 1px solid var(--line);
+  }
+  .read img { width: 150px; }
+  .read h3 { margin-bottom: 8px; }
+  .read p { color: var(--muted); max-width: 64ch; }
+
+  /* ── Karier & pemeran ─────────────────────────────────── */
+  .career {
+    position: relative; isolation: isolate;
+    background: var(--night);
+  }
+  .career::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, var(--night) 0%, rgba(6, 13, 26, .82) 30%, rgba(6, 13, 26, .9) 100%),
+      url("assets/story_bg.jpg") center 30% / cover no-repeat;
+    opacity: .9;
+  }
+  .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 56px; }
+  .stop { border-top: 3px solid var(--cyan); padding-top: 14px; display: grid; gap: 6px; }
+  .stop .n { font: 700 .7rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); }
+  .stop b { font: 800 1.35rem/1.1 var(--display); text-transform: uppercase; }
+  .stop p { color: var(--muted); font-size: .95rem; }
+  .stop.next { border-top-color: var(--line); }
+  .stop.next .n { color: var(--faint); }
+  .cast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .who {
+    position: relative; overflow: hidden; border-radius: 14px; background: var(--navy);
+    border: 1px solid var(--line); display: grid; grid-template-rows: 190px auto;
+  }
+  .who .pic { background: radial-gradient(80% 70% at 50% 100%, #173a6b, #0b1a31); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+  .who img { width: 88%; height: auto; object-fit: contain; object-position: bottom; max-height: 200px; }
+  .who div.t { padding: 12px 14px 16px; display: grid; gap: 4px; }
+  .who b { font: 800 1.1rem/1.1 var(--display); text-transform: uppercase; }
+  .who span { color: var(--muted); font-size: .88rem; line-height: 1.45; }
+  .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 44px; }
+  .stat b { display: block; font: 900 2.8rem/1 var(--display); color: var(--save); font-variant-numeric: tabular-nums; }
+  .stat span { font: 700 .68rem/1.4 var(--pixel); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+
+  /* ── Tim, sarung tangan, kaus ─────────────────────────── */
+  .squad-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+  .box { background: var(--navy); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 14px; align-content: start; }
+  .box p { color: var(--muted); }
+  .mates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mate { display: grid; gap: 6px; justify-items: center; text-align: center; }
+  .mate img { width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--line); background: #0e2344; image-rendering: auto; }
+  .mate span { font: 700 .62rem/1.3 var(--pixel); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+  .mate.paid img { border-color: var(--save); }
+  .gloves { display: flex; gap: 14px; align-items: flex-end; }
+  .gloves figure { margin: 0; display: grid; gap: 6px; justify-items: center; }
+  .gloves img { width: 84px; }
+  .gloves figcaption { font: 700 .6rem/1.3 var(--pixel); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+  .kits { grid-column: 1 / -1; }
+  .kit-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .kit-row figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: #0d203e; border-radius: 12px; padding: 10px 4px 10px; border: 1px solid #16305a; }
+  .kit-row img { width: 100%; max-width: 110px; }
+  .kit-row figcaption { font: 700 .58rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+  .note { font-size: .85rem; color: var(--faint); }
+
+  /* ── Rank ─────────────────────────────────────────────── */
+  .rank .wrap { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(28px, 6vw, 72px); align-items: center; }
+  .ladder { display: grid; gap: 8px; margin-top: 26px; max-width: 460px; }
+  .rung {
+    display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 12px;
+    background: var(--navy); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
+    font: 700 .74rem/1 var(--pixel); letter-spacing: .06em; text-transform: uppercase;
+  }
+  .rung .pos { color: var(--faint); font-variant-numeric: tabular-nums; }
+  .rung .rw { color: var(--cyan); }
+  .rung.you { border-color: var(--save); background: #1b2a18; }
+  .rung.you .pos, .rung.you .rw { color: var(--save); }
+  .rank-art img { border-radius: 18px; border: 2px solid var(--line); box-shadow: 0 30px 70px rgba(0, 0, 0, .55); max-height: 620px; width: auto; margin-inline: auto; }
+
+  /* ── Galeri ───────────────────────────────────────────── */
+  .shots { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(210px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+  .shot { margin: 0; scroll-snap-align: start; display: grid; gap: 10px; }
+  .phone {
+    border-radius: 26px; padding: 8px; background: #0a1426; border: 2px solid #203a63;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+  }
+  .phone img { border-radius: 19px; aspect-ratio: 420 / 852; width: 100%; object-fit: cover; }
+  .shot figcaption { font: 700 .66rem/1.4 var(--pixel); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; text-align: center; }
+
+  /* ── Penguji ──────────────────────────────────────────── */
+  .tester { text-align: center; background: radial-gradient(60% 80% at 50% 0%, rgba(250, 209, 10, .12), transparent 70%), var(--night); }
+  .tester .wrap { display: grid; justify-items: center; gap: 20px; }
+  .tester .lede { margin-inline: auto; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; max-width: 900px; margin-block: 10px; text-align: left; }
+  .steps li { list-style: none; background: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; color: var(--muted); font-size: .95rem; }
+  .steps li b { display: block; color: var(--ink); font: 800 1.15rem/1.1 var(--display); text-transform: uppercase; margin-bottom: 6px; }
+  .steps li i { font-style: normal; font: 700 .66rem/1 var(--pixel); color: var(--save); letter-spacing: .1em; display: block; margin-bottom: 10px; }
+  .mail {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 10px 10px 18px;
+  }
+  .mail code { font: 700 1rem/1 var(--body); color: var(--ink); user-select: all; }
+  .copied { font: 700 .66rem/1 var(--pixel); color: var(--save); letter-spacing: .08em; min-height: 1em; }
+
+  /* ── FAQ ──────────────────────────────────────────────── */
+  .faq { display: grid; gap: 10px; max-width: 860px; }
+  details { background: var(--navy); border: 1px solid var(--line); border-radius: 12px; }
+  summary {
+    cursor: pointer; list-style: none; padding: 18px 20px; font: 700 1.05rem/1.3 var(--body);
+    display: flex; justify-content: space-between; gap: 14px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font: 700 1.1rem/1 var(--pixel); color: var(--cyan); }
+  details[open] summary::after { content: "–"; }
+  details p { padding: 0 20px 18px; color: var(--muted); }
+  details a { color: var(--cyan); }
+
+  /* ── Kaki ─────────────────────────────────────────────── */
+  footer { border-top: 1px solid var(--line); padding-block: 44px 34px; background: #050b16; }
+  footer .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 28px; }
+  footer h4 { margin: 0 0 12px; font: 700 .72rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); text-transform: uppercase; }
+  footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+  .legal { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 20px; font-size: .82rem; color: var(--faint); display: grid; gap: 6px; }
+
+  /* ── Lebar sempit ─────────────────────────────────────── */
+  @media (max-width: 1000px) {
+    .ways { grid-template-columns: repeat(2, 1fr); }
+    .cast { grid-template-columns: repeat(3, 1fr); }
+    .links { display: none; }
+  }
+  @media (max-width: 800px) {
+    .hero .wrap, .broadcast .wrap, .rank .wrap, .squad-grid { grid-template-columns: 1fr; }
+    .hero-text { padding-bottom: 8px; }
+    .hero-art img { width: min(340px, 100%); }
+    .road, .steps { grid-template-columns: 1fr; }
+    .kit-row { grid-template-columns: repeat(4, 1fr); }
+    footer .wrap { grid-template-columns: 1fr 1fr; }
+    .read { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    .ways, .cast { grid-template-columns: 1fr 1fr; }
+    .mates { grid-template-columns: repeat(4, 1fr); }
+    .mate img { width: 58px; height: 58px; }
+    .nav .btn { display: none; }
+    .card { grid-template-columns: 30px 18px 1fr; font-size: .7rem; }
+    .who { grid-template-rows: 150px auto; }
+    footer .wrap { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card.new { animation: none; }
+    .btn { transition: none; }
+    .btn:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="34" height="34"><span>Be a Goalkeeper</span></a>
+    <div class="links">
+      <a href="#broadcast" data-i18n="nav_match">The match</a>
+      <a href="#saves" data-i18n="nav_saves">Saves</a>
+      <a href="#career" data-i18n="nav_story">Story</a>
+      <a href="#squad" data-i18n="nav_squad">Squad</a>
+      <a href="#rank" data-i18n="nav_rank">Rank</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-id" aria-pressed="false">ID</button>
+    </div>
+    <a class="btn small primary" href="#tester" data-i18n="nav_cta">Join the test</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <h1>Be a Goalkeeper</h1>
+        <img class="hero-logo" src="assets/logo.png" alt="Be a Goalkeeper" width="560" height="249">
+        <p class="claim" data-i18n="hero_claim">You are only the goalkeeper. <em>Every save is yours to make.</em></p>
+        <p class="lede" data-i18n="hero_lede">Every football game lets you score. This one puts you where the match is decided — and leaves you there alone. Read the striker, commit to a side, and live with the call.</p>
+        <div class="cta">
+          <a class="btn primary" href="#tester" data-i18n="hero_cta1">Join the closed test</a>
+          <a class="btn" href="#broadcast" data-i18n="hero_cta2">See how it plays</a>
+        </div>
+        <div class="facts">
+          <span>Android</span>
+          <span data-i18n="fact_free">Free to play</span>
+          <span data-i18n="fact_portrait">Portrait · one hand</span>
+          <span>English · Indonesia</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/hero.jpg" alt="The goalkeeper, number 1, facing a floodlit stadium at night" width="720" height="1279">
+        <div class="scorebug" aria-hidden="true">YOU <b>0 – 0</b> THE STRIKER</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Siaran -->
+  <section class="broadcast" id="broadcast">
+    <div class="wrap">
+      <div class="head" style="margin:0">
+        <p class="tag" data-i18n="bc_tag">The broadcast</p>
+        <h2 data-i18n="bc_title">A commentator who actually watched.</h2>
+        <p class="lede" data-i18n="bc_lede">The match is told, not just played. The commentary follows what really happened — your saves, your defenders, the opposition captain, the yellow card you could feel coming. It names your team-mates. It remembers the score. When a chance falls to the striker, the broadcast hands the moment to you.</p>
+        <p class="quote" data-i18n="bc_quote">It is the reason a match feels like a broadcast instead of a menu.</p>
+      </div>
+      <div class="ticker" aria-label="Sample match commentary">
+        <div class="ticker-top"><span class="live" data-i18n="bc_live">Live</span><span>RISING YOUTH × SAPLINGS FC</span></div>
+        <ol class="feed" id="feed" aria-live="off">
+          <li class="card"><span class="min">1'</span><span class="dot"></span><span>The whistle goes. We are underway.</span></li>
+          <li class="card"><span class="min">9'</span><span class="dot"></span><span>Their captain demands the ball.</span></li>
+          <li class="card"><span class="min">17'</span><span class="dot"></span><span>Espimas beats his man but the shot is turned away.</span></li>
+          <li class="card card-y"><span class="min">23'</span><span class="dot"></span><span>A yellow card for the opposition.</span></li>
+          <li class="card save"><span class="min">31'</span><span class="dot"></span><span>What a save! The stadium is on its feet!</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lima cara dibobol -->
+  <section id="saves">
+    <div class="wrap">
+      <div class="head">
+        <p class="tag" data-i18n="sv_tag">Five ways to be beaten</p>
+        <h2 data-i18n="sv_title">Each chance asks a different question.</h2>
+        <p class="lede" data-i18n="sv_lede">Every match brings four or more big chances, each one played as its own short duel. Win it and the broadcast roars. Lose it and the score changes.</p>
+      </div>
+      <div class="ways">
+        <article class="way">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1"/><circle cx="12" cy="15" r="2"/></svg></div>
+          <h3 data-i18n="w1_t">Penalty</h3>
+          <p data-i18n="w1_p">Twelve yards, one striker, your nerve. Watch the run-up and the lean of his shoulders, then pick a side.</p>
+          <p class="q" data-i18n="w1_q">Which way will he go?</p>
+        </article>
+        <article class="way">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 19c5-10 11-12 16-12"/><path d="M15 5l5 2-2 5"/></svg></div>
+          <h3 data-i18n="w2_t">Free kick</h3>
+          <p data-i18n="w2_p">Set your wall, then read the curl over it. Move too early and the far corner is open.</p>
+          <p class="q" data-i18n="w2_q">Over the wall or around it?</p>
+        </article>
+        <article class="way">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h13"/><path d="M13 8l4 4-4 4"/><circle cx="20" cy="12" r="1.5"/></svg></div>
+          <h3 data-i18n="w3_t">Long shot</h3>
+          <p data-i18n="w3_p">A strike from distance through a crowded box. Find the line of the ball the moment it leaves the boot.</p>
+          <p class="q" data-i18n="w3_q">Where is the line — right now?</p>
+        </article>
+        <article class="way">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 4l6 3-6 3"/><path d="M8 18c4-6 8-8 12-8"/></svg></div>
+          <h3 data-i18n="w4_t">Corner</h3>
+          <p data-i18n="w4_p">Chaos in the six-yard box. Choose your stance, then decide: come for the ball or trust your defenders.</p>
+          <p class="q" data-i18n="w4_q">Can I claim it?</p>
+        </article>
+        <article class="way">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="7" cy="6" r="2"/><path d="M7 8v6l-2 6"/><path d="M7 14l3 5"/><path d="M13 12h8"/></svg></div>
+          <h3 data-i18n="w5_t">One-on-one</h3>
+          <p data-i18n="w5_p">A striker running at you with the whole goal behind you. Rush the angle, hold the line, or spread low.</p>
+          <p class="q" data-i18n="w5_q">What does he mean to do?</p>
+        </article>
+      </div>
+      <div class="read">
+        <img src="assets/kit_biru.png" alt="The goalkeeper in the ready stance" width="256" height="256">
+        <div>
+          <h3 data-i18n="rd_t">Read the shooter, not the ball.</h3>
+          <p data-i18n="rd_p">The ball is too fast to react to. The striker is not. His standing foot, his hips, the half-second before he strikes — the tell is there, and it changes every time. When you need more, Keeper's Instinct shows you the lean a moment early.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Karier & cerita -->
+  <section class="career" id="career">
+    <div class="wrap">
+      <div class="head">
+        <p class="tag" data-i18n="cr_tag">A career, not a high score</p>
+        <h2 data-i18n="cr_title">From a village pitch to a stadium that knows your name.</h2>
+        <p class="lede" data-i18n="cr_lede">Start with a mother who thinks gloves do not pay school fees and a poster of Paffon, the keeper who made you want this. Every match moves the story, and the story is the reason the next match matters.</p>
+      </div>
+      <div class="road">
+        <div class="stop"><span class="n">CHAPTER 1</span><b data-i18n="c1_t">The academy</b><p data-i18n="c1_p">A trial, a coach who does not hand out praise, and a place in goal you have to earn.</p></div>
+        <div class="stop"><span class="n">CHAPTER 2</span><b data-i18n="c2_t">The pro academy</b><p data-i18n="c2_p">Bigger clubs, a rival keeper who is better than you, and your first reporter.</p></div>
+        <div class="stop next"><span class="n" data-i18n="c3_n">NEXT</span><b data-i18n="c3_t">The pro debut</b><p data-i18n="c3_p">Being written. Finish chapter 2 and the weekly Rank ladder opens while you wait.</p></div>
+      </div>
+      <div class="cast">
+        <div class="who"><div class="pic"><img src="assets/cast_parent.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p1_b">Mother</b><span data-i18n="p1_s">School first. She is not wrong, and that is the hard part.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_coach.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p2_b">The Coach</b><span data-i18n="p2_s">Speaks rarely. Means every word.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_rival.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p3_b">The Rival</b><span data-i18n="p3_s">Talented, wealthy, and always one step ahead — until he isn't.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_captain.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p4_b">Minanda, Captain</b><span data-i18n="p4_s">Doubts you first, defends you loudest.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_friend.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p5_b">Best Friend</b><span data-i18n="p5_s">The one person who never asks for anything.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_crush.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p6_b">The Girl at the Gate</b><span data-i18n="p6_s">Watching from the fence. You noticed.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_coach_pro.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p7_b">The Pro Coach</b><span data-i18n="p7_s">A new level, a new standard.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_reporter.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p8_b">The Reporter</b><span data-i18n="p8_s">Turns your saves into headlines — or your mistakes.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_fan_club.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p9_b">The Fan Club</b><span data-i18n="p9_s">Loud, loyal, and louder when you lose.</span></div></div>
+        <div class="who"><div class="pic"><img src="assets/cast_player.png" alt="" loading="lazy"></div><div class="t"><b data-i18n="p10_b">You</b><span data-i18n="p10_s">Name him. Pick his face and frame. Then earn the number 1.</span></div></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>28</b><span data-i18n="st1">matches in two chapters</span></div>
+        <div class="stat"><b>33</b><span data-i18n="st2">story scenes</span></div>
+        <div class="stat"><b>5</b><span data-i18n="st3">kinds of chances</span></div>
+        <div class="stat"><b>~4</b><span data-i18n="st4">minutes a match</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tim -->
+  <section id="squad">
+    <div class="wrap">
+      <div class="head">
+        <p class="tag" data-i18n="sq_tag">Build the team around you</p>
+        <h2 data-i18n="sq_title">Team-mates who change how the match runs.</h2>
+        <p class="lede" data-i18n="sq_lede">A defender who blocks shots before they reach you. A winger who turns your saves into counter-attacks. Four players start with you; four more are waiting in the transfer market.</p>
+      </div>
+      <div class="squad-grid">
+        <div class="box">
+          <h3 data-i18n="bx1_t">The squad</h3>
+          <div class="mates">
+            <div class="mate"><img src="assets/mate_bek_jaric.png" alt="" loading="lazy"><span>Jaric</span></div>
+            <div class="mate"><img src="assets/mate_captain.png" alt="" loading="lazy"><span>Minanda</span></div>
+            <div class="mate"><img src="assets/mate_penyerang_castolo.png" alt="" loading="lazy"><span>Castolo</span></div>
+            <div class="mate"><img src="assets/mate_sayap_espimas.png" alt="" loading="lazy"><span>Espimas</span></div>
+            <div class="mate paid"><img src="assets/mate_bek_maldin.png" alt="" loading="lazy"><span>Maldin</span></div>
+            <div class="mate paid"><img src="assets/mate_penyerang_vasten.png" alt="" loading="lazy"><span>Vasten</span></div>
+            <div class="mate paid"><img src="assets/mate_gelandang_zadine.png" alt="" loading="lazy"><span>Zadine</span></div>
+            <div class="mate paid"><img src="assets/mate_naldo.png" alt="" loading="lazy"><span>Naldo</span></div>
+          </div>
+          <p class="note" data-i18n="bx1_n">Gold border: signed in the transfer market with gems you earn by playing. Each one arrives with a scene of their own.</p>
+        </div>
+        <div class="box">
+          <h3 data-i18n="bx2_t">Gloves with a story</h3>
+          <div class="gloves">
+            <figure><img src="assets/glove_akademi.png" alt="" loading="lazy"><figcaption data-i18n="g1">First pair</figcaption></figure>
+            <figure><img src="assets/glove_foresight.png" alt="" loading="lazy"><figcaption data-i18n="g2">Foresight</figcaption></figure>
+            <figure><img src="assets/glove_legenda.png" alt="" loading="lazy"><figcaption>Paffon Legacy</figcaption></figure>
+          </div>
+          <p data-i18n="bx2_p">Nine pairs, bought with coins from your matches. The rarest carry a signature move that flares up when you use Keeper's Instinct.</p>
+        </div>
+        <div class="box kits">
+          <h3 data-i18n="bx3_t">Your kit, your colour</h3>
+          <div class="kit-row">
+            <figure><img src="assets/kit_biru.png" alt="" loading="lazy"><figcaption data-i18n="k1">Club Blue</figcaption></figure>
+            <figure><img src="assets/kit_hitam.png" alt="" loading="lazy"><figcaption data-i18n="k2">Midnight Black</figcaption></figure>
+            <figure><img src="assets/kit_putih.png" alt="" loading="lazy"><figcaption data-i18n="k3">Polar White</figcaption></figure>
+            <figure><img src="assets/kit_limau.png" alt="" loading="lazy"><figcaption data-i18n="k4">Lime</figcaption></figure>
+            <figure><img src="assets/kit_stabilo.png" alt="" loading="lazy"><figcaption data-i18n="k5">Neon Yellow</figcaption></figure>
+            <figure><img src="assets/kit_ungu.png" alt="" loading="lazy"><figcaption data-i18n="k6">Dusk Purple</figcaption></figure>
+            <figure><img src="assets/kit_merahmuda.png" alt="" loading="lazy"><figcaption data-i18n="k7">Pink</figcaption></figure>
+          </div>
+          <p data-i18n="bx3_p">Looks only — a kit never changes a stat. Whatever you wear shows up in every match. Add daily rewards, missions and six avatar frames to chase.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rank -->
+  <section class="rank" id="rank">
+    <div class="wrap">
+      <div>
+        <div class="head" style="margin:0">
+          <p class="tag" data-i18n="rk_tag">After chapter 2</p>
+          <h2 data-i18n="rk_title">The weekly Rank ladder.</h2>
+          <p class="lede" data-i18n="rk_lede">Penalty shootouts against club sides, from #100 to the top. You take your team's kicks and you save theirs. Every week the season closes, the rewards are paid, and the ladder starts again.</p>
+        </div>
+        <div class="ladder" aria-hidden="true">
+          <div class="rung"><span class="pos">#1</span><span data-i18n="rk_r1">Champion</span><span class="rw">+GEMS</span></div>
+          <div class="rung"><span class="pos">#12</span><span>Club Senior Side</span><span class="rw">+GEMS</span></div>
+          <div class="rung you"><span class="pos">#38</span><span data-i18n="rk_you">You · 3 of 3 saved</span><span class="rw">▲ 4</span></div>
+          <div class="rung"><span class="pos">#100</span><span data-i18n="rk_r4">Where everyone starts</span><span class="rw">—</span></div>
+        </div>
+        <p class="note" style="margin-top:14px" data-i18n="rk_note">Rank opponents are computer-controlled clubs. There is no online play.</p>
+      </div>
+      <div class="rank-art"><img src="assets/rank_win.jpg" alt="The team celebrating a won shootout" loading="lazy" width="560" height="1245"></div>
+    </div>
+  </section>
+
+  <!-- Galeri -->
+  <section id="screens" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <p class="tag" data-i18n="gl_tag">From the current build</p>
+        <h2 data-i18n="gl_title">See it in your hand.</h2>
+      </div>
+      <div class="shots">
+        <figure class="shot"><div class="phone"><img src="assets/shot_03b_pertandingan_berjalan.jpg" alt="Match screen with live commentary" loading="lazy"></div><figcaption data-i18n="s1">The broadcast</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_06d_penalty_kaus.jpg" alt="Penalty, keeper in a purple kit" loading="lazy"></div><figcaption data-i18n="s2">Penalty</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_09_corner.jpg" alt="Corner defence" loading="lazy"></div><figcaption data-i18n="s3">Corner</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_02b_cerita_dua_sisi.jpg" alt="A story scene with two characters" loading="lazy"></div><figcaption data-i18n="s4">The story</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_05f_toko_kaus.jpg" alt="Gear shop with keeper kits" loading="lazy"></div><figcaption data-i18n="s5">Keeper kits</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_05l_rank_menang.jpg" alt="Rank shootout won" loading="lazy"></div><figcaption data-i18n="s6">Rank win</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Penguji -->
+  <section class="tester" id="tester">
+    <div class="wrap">
+      <p class="tag" data-i18n="ts_tag">Closed test on Google Play</p>
+      <h2 data-i18n="ts_title">Play it before anyone else.</h2>
+      <p class="lede" data-i18n="ts_lede">We are opening a closed test before the public release. Testers play the real build on their own Android phone and tell us what felt wrong, what felt good, and whether they wanted one more match.</p>
+      <ol class="steps">
+        <li><i>STEP 1</i><b data-i18n="t1_b">Email us</b><span data-i18n="t1_p">Send the Gmail address you use on your Android phone.</span></li>
+        <li><i>STEP 2</i><b data-i18n="t2_b">Get the link</b><span data-i18n="t2_p">We add you to the tester list and reply with the Google Play opt-in link.</span></li>
+        <li><i>STEP 3</i><b data-i18n="t3_b">Play for two weeks</b><span data-i18n="t3_p">Keep it installed for 14 days and play when you feel like it. That is all.</span></li>
+      </ol>
+      <div class="mail">
+        <code id="email">porogapitstudio@gmail.com</code>
+        <button class="btn small" type="button" id="copy" data-i18n="ts_copy">Copy address</button>
+        <a class="btn small primary" id="mailto" href="mailto:porogapitstudio@gmail.com?subject=Be%20a%20Goalkeeper%20tester" data-i18n="ts_mail">Write the email</a>
+      </div>
+      <p class="copied" id="copied" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><p class="tag">FAQ</p><h2 data-i18n="fq_title">Before you ask.</h2></div>
+      <div class="faq">
+        <details><summary data-i18n="f1_q">How much does it cost?</summary><p data-i18n="f1_a">Nothing. The game is free to play and contains ads. There are no in-app purchases: coins, gems, gloves, kits and team-mates are all earned by playing.</p></details>
+        <details><summary data-i18n="f2_q">Which phones can play it?</summary><p data-i18n="f2_a">Android phones. It starts as a closed test on Google Play, followed by a public release.</p></details>
+        <details><summary data-i18n="f3_q">Is there online multiplayer?</summary><p data-i18n="f3_a">No. The weekly Rank ladder is played against computer-controlled club sides. Your career is yours alone.</p></details>
+        <details><summary data-i18n="f4_q">Do I need an internet connection?</summary><p data-i18n="f4_a">Your career is saved on your phone. Ads need a connection to load.</p></details>
+        <details><summary data-i18n="f5_q">Which languages are included?</summary><p data-i18n="f5_a">English and Bahasa Indonesia, switchable any time in Settings.</p></details>
+        <details><summary data-i18n="f6_q">Do I need an account? What about my data?</summary><p data-i18n="f6_a">No account, no sign-up. Ads are served by Google AdMob, which uses a device identifier; where the law requires it, you can review your ad consent in Settings. The full details are in our <a href="https://antztouchable.github.io/privacy/">privacy policy</a>.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="34" height="34"><span>Be a Goalkeeper</span></a>
+      <p class="note" style="margin-top:12px" data-i18n="ft_by">A game by Porogapit Studio.</p>
+    </div>
+    <div>
+      <h4 data-i18n="ft_follow">Follow</h4>
+      <ul>
+        <li><a href="https://www.facebook.com/profile.php?id=100082757384889" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/porogapitstudio/" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.youtube.com/@PorogapitStudio" rel="noopener">YouTube</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="ft_info">Info</h4>
+      <ul>
+        <li><a href="https://antztouchable.github.io/privacy/" id="privacy-link" data-i18n="ft_priv">Privacy policy</a></li>
+        <li><a href="#tester" data-i18n="ft_test">Become a tester</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <span>© <span id="year">2026</span> Porogapit Studio.</span>
+      <span data-i18n="ft_tm">All clubs, players and characters are fictional. Google Play is a trademark of Google LLC.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Bahasa. Inggris ditulis di HTML; Indonesia ditulis TERPISAH di sini,
+  // bukan diterjemahkan kalimat per kalimat (aturan proyek #5).
+  var ID = {
+    nav_match: "Pertandingan", nav_saves: "Penyelamatan", nav_story: "Cerita", nav_squad: "Skuad", nav_rank: "Peringkat",
+    nav_cta: "Ikut uji coba",
+    hero_claim: "Kamu cuma kiper. <em>Setiap penyelamatan jadi milikmu.</em>",
+    hero_lede: "Game bola lain memberimu kesempatan mencetak gol. Yang ini menaruhmu di tempat pertandingan benar-benar ditentukan — lalu meninggalkanmu sendirian di sana. Baca penendangnya, pilih sisimu, dan tanggung akibatnya.",
+    hero_cta1: "Ikut uji coba tertutup", hero_cta2: "Lihat cara mainnya",
+    fact_free: "Gratis dimainkan", fact_portrait: "Layar tegak · satu tangan",
+    bc_tag: "Siarannya", bc_title: "Komentator yang benar-benar menonton.",
+    bc_lede: "Pertandingannya diceritakan, bukan sekadar dimainkan. Komentarnya mengikuti apa yang sungguh terjadi — penyelamatanmu, bekmu, kapten lawan, kartu kuning yang sudah terasa datang. Ia menyebut nama rekan setimmu dan ingat skornya. Begitu bola jatuh ke kaki penyerang, siaran menyerahkan momen itu kepadamu.",
+    bc_quote: "Itu yang membuat satu pertandingan terasa seperti siaran, bukan seperti menu.",
+    bc_live: "Langsung",
+    sv_tag: "Lima cara untuk dibobol", sv_title: "Setiap peluang menanyakan hal yang berbeda.",
+    sv_lede: "Tiap pertandingan membawa empat peluang besar atau lebih, masing-masing dimainkan sebagai duel singkat. Menang, dan siaran bergemuruh. Kalah, dan skornya berubah.",
+    w1_t: "Penalti", w1_p: "Dua belas pas, satu penendang, dan nyalimu. Perhatikan ancang-ancang dan condong bahunya, lalu pilih sisi.", w1_q: "Ke mana ia menendang?",
+    w2_t: "Tendangan bebas", w2_p: "Pasang pagar betis, lalu baca lengkungannya. Bergerak terlalu cepat dan tiang jauh terbuka.", w2_q: "Di atas pagar atau memutarinya?",
+    w3_t: "Tembakan jauh", w3_p: "Sepakan dari jauh menembus kotak yang penuh orang. Temukan garis bolanya begitu lepas dari kaki.", w3_q: "Ke mana garisnya — sekarang juga?",
+    w4_t: "Sepak pojok", w4_p: "Kekacauan di kotak kecil. Pilih sikapmu, lalu putuskan: jemput bolanya atau percayakan pada bekmu.", w4_q: "Sanggupkah aku menjemputnya?",
+    w5_t: "Satu lawan satu", w5_p: "Penyerang berlari ke arahmu dengan gawang menganga di belakangmu. Tutup sudut, tahan garis, atau rebahkan badan.", w5_q: "Apa maunya?",
+    rd_t: "Baca penendangnya, bukan bolanya.",
+    rd_p: "Bolanya terlalu cepat untuk direaksi. Penendangnya tidak. Kaki tumpunya, pinggulnya, setengah detik sebelum ia menendang — tandanya ada di situ, dan selalu berubah. Saat butuh lebih, Naluri Kiper memperlihatkan condongnya sedikit lebih awal.",
+    cr_tag: "Karier, bukan skor tertinggi", cr_title: "Dari lapangan kampung ke stadion yang tahu namamu.",
+    cr_lede: "Mulai dengan ibu yang yakin sarung tangan tidak membayar uang sekolah, dan poster Paffon — kiper yang membuatmu ingin semua ini. Setiap pertandingan menggerakkan cerita, dan ceritanya yang membuat pertandingan berikutnya berarti.",
+    c1_t: "Akademi", c1_p: "Seleksi, pelatih yang tidak murah memuji, dan tempat di bawah mistar yang harus direbut.",
+    c2_t: "Akademi profesional", c2_p: "Klub yang lebih besar, rival kiper yang memang lebih baik darimu, dan wartawan pertamamu.",
+    c3_n: "BERIKUTNYA", c3_t: "Debut profesional", c3_p: "Sedang ditulis. Tuntaskan chapter 2 dan tangga Peringkat mingguan terbuka sambil menunggu.",
+    p1_b: "Ibu", p1_s: "Sekolah dulu. Ia tidak salah, dan justru itu yang berat.",
+    p2_b: "Pelatih", p2_s: "Jarang bicara. Setiap katanya serius.",
+    p3_b: "Rival", p3_s: "Berbakat, kaya, dan selalu selangkah di depan — sampai tidak lagi.",
+    p4_b: "Minanda, Kapten", p4_s: "Yang pertama meragukanmu, yang paling keras membelamu.",
+    p5_b: "Sahabat", p5_s: "Satu-satunya orang yang tidak pernah meminta apa pun.",
+    p6_b: "Gadis di Gerbang", p6_s: "Menonton dari balik pagar. Kamu memperhatikannya.",
+    p7_b: "Pelatih Profesional", p7_s: "Level baru, standar baru.",
+    p8_b: "Wartawan", p8_s: "Mengubah penyelamatanmu jadi berita — atau kesalahanmu.",
+    p9_b: "Fans Club", p9_s: "Berisik, setia, dan makin berisik saat kalah.",
+    p10_b: "Kamu", p10_s: "Beri ia nama, pilih wajah dan bingkainya. Lalu rebut nomor 1.",
+    st1: "pertandingan dalam dua chapter", st2: "adegan cerita", st3: "jenis peluang", st4: "menit per pertandingan",
+    sq_tag: "Bangun tim di sekitarmu", sq_title: "Rekan setim yang mengubah jalannya laga.",
+    sq_lede: "Bek yang memblok tembakan sebelum sampai kepadamu. Sayap yang mengubah penyelamatanmu jadi serangan balik. Empat pemain mulai bersamamu; empat lagi menunggu di bursa transfer.",
+    bx1_t: "Skuad", bx1_n: "Bingkai emas: direkrut di bursa transfer dengan gems yang didapat dari bermain. Masing-masing datang dengan adegannya sendiri.",
+    bx2_t: "Sarung tangan bercerita", g1: "Pasang pertama", g2: "Foresight",
+    bx2_p: "Sembilan pasang, dibeli dengan koin dari pertandinganmu. Yang paling langka membawa jurus yang menyala saat Naluri Kiper dipakai.",
+    bx3_t: "Kausmu, warnamu",
+    k1: "Biru Klub", k2: "Hitam Malam", k3: "Putih Salju", k4: "Hijau Limau", k5: "Kuning Stabilo", k6: "Ungu Senja", k7: "Merah Muda",
+    bx3_p: "Hanya tampilan — kaus tidak pernah mengubah stat. Apa pun yang kamu pakai terlihat di setiap pertandingan. Ditambah hadiah harian, misi, dan enam bingkai avatar untuk dikejar.",
+    rk_tag: "Sesudah chapter 2", rk_title: "Tangga Peringkat mingguan.",
+    rk_lede: "Adu penalti melawan klub-klub, dari #100 sampai puncak. Kamu menendang untuk timmu dan menjaga gawang dari tendangan mereka. Tiap pekan musim ditutup, hadiah dibayar, dan tangganya dimulai lagi.",
+    rk_r1: "Juara", rk_you: "Kamu · 3 dari 3 ditepis", rk_r4: "Tempat semua orang memulai",
+    rk_note: "Lawan di Peringkat adalah klub yang dikendalikan komputer. Tidak ada permainan daring.",
+    gl_tag: "Dari build terbaru", gl_title: "Lihat di tanganmu.",
+    s1: "Siarannya", s2: "Penalti", s3: "Sepak pojok", s4: "Ceritanya", s5: "Kaus kiper", s6: "Menang di Peringkat",
+    ts_tag: "Uji coba tertutup di Google Play", ts_title: "Mainkan sebelum orang lain.",
+    ts_lede: "Kami membuka uji coba tertutup sebelum rilis publik. Penguji memainkan build sungguhan di HP Android sendiri, lalu memberi tahu kami apa yang terasa salah, apa yang terasa pas, dan apakah mereka ingin main satu pertandingan lagi.",
+    t1_b: "Kirim email", t1_p: "Kirim alamat Gmail yang kamu pakai di HP Android.",
+    t2_b: "Terima tautan", t2_p: "Kami masukkan kamu ke daftar penguji dan membalas dengan tautan ikut serta Google Play.",
+    t3_b: "Main dua pekan", t3_p: "Biarkan terpasang selama 14 hari dan main kapan pun kamu mau. Itu saja.",
+    ts_copy: "Salin alamat", ts_mail: "Tulis emailnya",
+    fq_title: "Sebelum kamu bertanya.",
+    f1_q: "Berapa harganya?", f1_a: "Gratis. Game ini bisa dimainkan tanpa bayar dan memuat iklan. Tidak ada pembelian dalam aplikasi: koin, gems, sarung tangan, kaus, dan rekan setim semuanya didapat dari bermain.",
+    f2_q: "HP apa yang bisa memainkannya?", f2_a: "HP Android. Dimulai sebagai uji coba tertutup di Google Play, lalu rilis publik.",
+    f3_q: "Ada mode multipemain daring?", f3_a: "Tidak. Tangga Peringkat mingguan dimainkan melawan klub yang dikendalikan komputer. Kariermu milikmu sendiri.",
+    f4_q: "Perlu koneksi internet?", f4_a: "Kariermu tersimpan di HP-mu sendiri. Iklan butuh koneksi untuk dimuat.",
+    f5_q: "Bahasa apa saja yang tersedia?", f5_a: "Bahasa Inggris dan Bahasa Indonesia, bisa diganti kapan saja di Pengaturan.",
+    f6_q: "Perlu akun? Bagaimana dengan dataku?", f6_a: "Tidak perlu akun, tidak perlu mendaftar. Iklan ditayangkan oleh Google AdMob, yang memakai pengenal perangkat; di wilayah yang mewajibkannya, persetujuan iklanmu bisa ditinjau di Pengaturan. Rinciannya ada di <a href=\"https://antztouchable.github.io/privacy/id.html\">kebijakan privasi</a> kami.",
+    ft_by: "Game dari Porogapit Studio.", ft_follow: "Ikuti", ft_info: "Info", ft_priv: "Kebijakan privasi", ft_test: "Jadi penguji",
+    ft_tm: "Semua klub, pemain, dan tokoh adalah fiksi. Google Play adalah merek dagang Google LLC."
+  };
+
+  // Baris komentator ASLI dari assets/data/localization/ui.csv, dua bahasa.
+  var LINES = [
+    { k: "", en: "Ordaz is organising them from midfield.", id: "Ordaz mengatur barisan mereka dari tengah." },
+    { k: "save", en: "Fingertips! It's away from goal!", id: "Ujung jari! Bola menjauh dari gawang!" },
+    { k: "", en: "The shot drifts wide — no danger.", id: "Bola melebar — tidak membahayakan." },
+    { k: "goal", en: "GOAL! A rocket from outside the box!", id: "GOL! Tendangan keras dari luar kotak!" },
+    { k: "", en: "Our defender blocks it.", id: "Bek kita memblok tembakannya." },
+    { k: "save", en: "An impossible reflex! How was that kept out?", id: "Refleks yang mustahil! Bagaimana bisa ditahan?" },
+    { k: "", en: "Our shot smacks the post!", id: "Bola kita membentur tiang!" },
+    { k: "save", en: "That's a save they'll replay all night!", id: "Penyelamatan yang akan diputar berulang malam ini!" },
+    { k: "", en: "It floats gently into the arms of Iouga.", id: "Bola melayang pelan ke pelukan Iouga." },
+    { k: "save", en: "Full stretch and he holds it cleanly!", id: "Terbang penuh dan bolanya dipeluk erat!" }
+  ];
+  var START = [
+    { m: 1, k: "", en: "The whistle goes. We are underway.", id: "Peluit berbunyi. Pertandingan berjalan." },
+    { m: 9, k: "", en: "Their captain demands the ball.", id: "Kapten mereka menuntut bola." },
+    { m: 17, k: "", en: "Espimas beats his man but the shot is turned away.", id: "Espimas melewati bek lalu tembakannya ditepis." },
+    { m: 23, k: "card-y", en: "A yellow card for the opposition.", id: "Kartu kuning untuk lawan." },
+    { m: 31, k: "save", en: "What a save! The stadium is on its feet!", id: "Penyelamatan luar biasa! Stadion berdiri!" }
+  ];
+
+  var lang = "en";
+  var asli = {};
+
+  function pasangBahasa(l) {
+    lang = l;
+    document.documentElement.lang = l;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      if (!(k in asli)) asli[k] = el.innerHTML;
+      el.innerHTML = l === "id" && ID[k] ? ID[k] : asli[k];
+    });
+    document.getElementById("lang-en").setAttribute("aria-pressed", l === "en");
+    document.getElementById("lang-id").setAttribute("aria-pressed", l === "id");
+    document.getElementById("privacy-link").href = l === "id"
+      ? "https://antztouchable.github.io/privacy/id.html"
+      : "https://antztouchable.github.io/privacy/";
+    document.getElementById("mailto").href = "mailto:porogapitstudio@gmail.com?subject=" +
+      encodeURIComponent(l === "id" ? "Penguji Be a Goalkeeper" : "Be a Goalkeeper tester");
+    renderFeed();
+    try { localStorage.setItem("bag_lang", l); } catch (e) {}
+  }
+
+  // ── Ticker: baris baru masuk dari BAWAH, seperti di game (dasarnya dikunci).
+  var feed = document.getElementById("feed");
+  var riwayat = START.slice();
+  var menit = 31, urut = 0;
+
+  function kartu(b, baru) {
+    var li = document.createElement("li");
+    li.className = "card" + (b.k ? " " + b.k : "") + (baru ? " new" : "");
+    li.innerHTML = '<span class="min">' + b.m + "'</span><span class=\"dot\"></span><span></span>";
+    li.lastChild.textContent = b[lang];
+    return li;
+  }
+  function renderFeed(baru) {
+    feed.innerHTML = "";
+    riwayat.forEach(function (b, i) { feed.appendChild(kartu(b, baru && i === riwayat.length - 1)); });
+  }
+  function tick() {
+    menit += 5 + Math.floor(Math.random() * 7);
+    // Laga baru dimulai dari peluit, bukan dari kotak kosong.
+    if (menit > 90) { menit = 4; riwayat = [START[0]]; }
+    var b = LINES[urut++ % LINES.length];
+    riwayat.push({ m: menit, k: b.k, en: b.en, id: b.id });
+    if (riwayat.length > 5) riwayat.shift();
+    renderFeed(true);
+  }
+  var tenang = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!tenang) setInterval(tick, 2600);
+
+  // ── Salin alamat email (mailto bisa tidak jalan di beberapa peramban).
+  document.getElementById("copy").addEventListener("click", function () {
+    var teks = document.getElementById("email").textContent;
+    var tanda = document.getElementById("copied");
+    function ok() { tanda.textContent = lang === "id" ? "Alamat disalin." : "Address copied."; }
+    function pilih() {
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById("email"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      tanda.textContent = lang === "id" ? "Alamat terpilih — tekan salin." : "Address selected — press copy.";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(teks).then(ok, pilih);
+    } else { pilih(); }
+  });
+
+  document.getElementById("lang-en").addEventListener("click", function () { pasangBahasa("en"); });
+  document.getElementById("lang-id").addEventListener("click", function () { pasangBahasa("id"); });
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var awal = "en";
+  try { awal = localStorage.getItem("bag_lang") || ((navigator.language || "").slice(0, 2) === "id" ? "id" : "en"); } catch (e) {}
+  if (awal === "id") pasangBahasa("id");
+</script>
+</body>
+</html>
