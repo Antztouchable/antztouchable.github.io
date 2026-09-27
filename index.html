@@ -273,10 +273,14 @@
   .cast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
   .who {
     position: relative; overflow: hidden; border-radius: 14px; background: var(--navy);
-    border: 1px solid var(--line); display: grid; grid-template-rows: 190px auto;
+    border: 1px solid var(--line); display: grid; grid-template-rows: auto 1fr; align-content: start;
   }
-  .who .pic { background: radial-gradient(80% 70% at 50% 100%, #173a6b, #0b1a31); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
-  .who img { width: 88%; height: auto; object-fit: contain; object-position: bottom; max-height: 200px; }
+  /* Gambar tokoh DIPOTONG SERAGAM di sumbernya (lebar wajah sama, dagu di tinggi
+     yang sama, 300×263) — jadi kotaknya cukup mengikuti nisbah itu dan terisi
+     penuh. Dulu `contain` dengan lebar 88% membuat skala tiap tokoh ikut lebar
+     pose-nya: yang merentang tangan tampil lebih kecil. */
+  .who .pic { background: radial-gradient(80% 70% at 50% 100%, #173a6b, #0b1a31); aspect-ratio: 300 / 263; overflow: hidden; }
+  .who img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .who div.t { padding: 12px 14px 16px; display: grid; gap: 4px; }
   .who b { font: 800 1.1rem/1.1 var(--display); text-transform: uppercase; }
   .who span { color: var(--muted); font-size: .88rem; line-height: 1.45; }
@@ -415,7 +419,7 @@
     .brand span { font-size: 1rem; letter-spacing: .04em; }
     .nav-end { gap: 8px; }
     .card { grid-template-columns: 30px 18px 1fr; font-size: .88rem; }
-    .who { grid-template-rows: 150px auto; }
+    .who { grid-template-rows: auto auto; }
     .studio > img { width: 96px; height: 96px; }
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
     .legal { flex-direction: column; }
