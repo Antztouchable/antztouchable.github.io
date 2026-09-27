@@ -208,11 +208,12 @@
   .way p { color: var(--muted); font-size: .95rem; line-height: 1.55; }
   .way .q { font: 700 .66rem/1.5 var(--pixel); letter-spacing: .06em; color: var(--save); text-transform: uppercase; }
   .read {
-    margin-top: 40px; display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
-    background: linear-gradient(90deg, var(--panel), transparent); border-radius: 16px; padding: 22px 26px;
+    margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center;
+    background: linear-gradient(90deg, var(--panel), transparent); border-radius: 16px; padding: 18px 28px 18px 18px;
     border: 1px solid var(--line);
   }
-  .read img { width: 150px; }
+  /* Seni lanskap 793x495 — kiper menyelam meraih bola di lapangan latihan. */
+  .read img { width: 100%; aspect-ratio: 793 / 495; object-fit: cover; border-radius: 12px; border: 2px solid var(--line); }
   .read h3 { margin-bottom: 8px; }
   .read p { color: var(--muted); max-width: 64ch; }
 
@@ -342,7 +343,7 @@
     .road, .steps { grid-template-columns: 1fr; }
     .kit-row { grid-template-columns: repeat(4, 1fr); }
     footer .wrap { grid-template-columns: 1fr 1fr; }
-    .read { grid-template-columns: 1fr; }
+    .read { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
   }
   @media (max-width: 520px) {
     body { font-size: 16px; }
@@ -474,7 +475,7 @@
         </article>
       </div>
       <div class="read">
-        <img src="assets/kit_biru.png" alt="The goalkeeper in the ready stance" width="256" height="256">
+        <img src="assets/read_dive.jpg" alt="The goalkeeper at full stretch, fingertips reaching the ball under the crossbar" width="793" height="495" loading="lazy">
         <div>
           <h3 data-i18n="rd_t">Read the shooter, not the ball.</h3>
           <p data-i18n="rd_p">The ball is too fast to react to. The striker is not. His standing foot, his hips, the half-second before he strikes — the tell is there, and it changes every time. When you need more, Keeper's Instinct shows you the lean a moment early.</p>
