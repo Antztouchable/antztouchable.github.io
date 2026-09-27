@@ -311,13 +311,6 @@
   .kit-row img { width: 100%; max-width: 110px; }
   .kit-row figcaption { font: 700 .75rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
   .note { font-size: .85rem; color: var(--faint); }
-  .kit-sub { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-  .kit-sub h4 { margin: 0; font: 800 1.15rem/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
-  .soon {
-    font: 700 .78rem/1 var(--pixel); letter-spacing: .1em; text-transform: uppercase;
-    color: var(--night); background: var(--save); border-radius: 999px; padding: 5px 10px;
-  }
-  .kit-row.grad { grid-template-columns: repeat(6, 1fr); }
 
   /* ── Rank ─────────────────────────────────────────────── */
   .rank .wrap { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(28px, 6vw, 72px); align-items: center; }
@@ -417,7 +410,6 @@
     .mates { grid-template-columns: repeat(4, 1fr); }
     .mate img { width: 58px; height: 58px; }
     .nav-cta { display: none; }
-    .kit-row.grad { grid-template-columns: repeat(3, 1fr); }
     .brand span { font-size: 1rem; letter-spacing: .04em; }
     .nav-end { gap: 8px; }
     .card { grid-template-columns: 30px 18px 1fr; font-size: .88rem; }
@@ -656,19 +648,13 @@
         </div>
         <div class="box kits">
           <h3 data-i18n="bx3_t">Your kit, your colour</h3>
+          <!-- Keputusan pemilik proyek 2026-09-27: rak warna solid DIGANTI kaus
+               bergradasi (seni mentah/keeper_ready_*.png), kecuali biru bawaan yang
+               namanya diganti "Samudra / Ocean". ⚠️ Di GAME rak ini belum berubah:
+               kaus gradasi butuh empat lembar pose lagi per warna. Halaman ini jangan
+               di-push sebelum rak game menjual yang sama. -->
           <div class="kit-row">
-            <figure><img src="assets/kit_biru.png" alt="" loading="lazy"><figcaption data-i18n="k1">Club Blue</figcaption></figure>
-            <figure><img src="assets/kit_hitam.png" alt="" loading="lazy"><figcaption data-i18n="k2">Midnight Black</figcaption></figure>
-            <figure><img src="assets/kit_putih.png" alt="" loading="lazy"><figcaption data-i18n="k3">Polar White</figcaption></figure>
-            <figure><img src="assets/kit_limau.png" alt="" loading="lazy"><figcaption data-i18n="k4">Lime</figcaption></figure>
-            <figure><img src="assets/kit_stabilo.png" alt="" loading="lazy"><figcaption data-i18n="k5">Neon Yellow</figcaption></figure>
-            <figure><img src="assets/kit_ungu.png" alt="" loading="lazy"><figcaption data-i18n="k6">Dusk Purple</figcaption></figure>
-            <figure><img src="assets/kit_merahmuda.png" alt="" loading="lazy"><figcaption data-i18n="k7">Pink</figcaption></figure>
-          </div>
-          <!-- Kaus bergradasi: seni digambar pemilik proyek (mentah/keeper_ready_*.png),
-               BELUM ada di game — baru pose siap. Karena itu berlabel "segera". -->
-          <div class="kit-sub"><h4 data-i18n="kg_t">Gradient kits</h4><span class="soon" data-i18n="kg_soon">Coming soon</span></div>
-          <div class="kit-row grad">
+            <figure><img src="assets/kit_biru.png" alt="" loading="lazy"><figcaption data-i18n="k1">Ocean</figcaption></figure>
             <figure><img src="assets/kitg_racun.png" alt="" loading="lazy"><figcaption data-i18n="kg1">Toxic</figcaption></figure>
             <figure><img src="assets/kitg_senja.png" alt="" loading="lazy"><figcaption data-i18n="kg2">Twilight Pink</figcaption></figure>
             <figure><img src="assets/kitg_hutan.png" alt="" loading="lazy"><figcaption data-i18n="kg3">Forest</figcaption></figure>
@@ -696,7 +682,7 @@
         <div class="ladder" aria-hidden="true">
           <div class="rung"><span class="pos">#1</span><span data-i18n="rk_r1">Champion</span><span class="rw">+GEMS</span></div>
           <div class="rung"><span class="pos">#12</span><span>Club Senior Side</span><span class="rw">+GEMS</span></div>
-          <div class="rung you"><span class="pos">#38</span><span data-i18n="rk_you">You · 3 of 3 saved</span><span class="rw">▲ 4</span></div>
+          <div class="rung you"><span class="pos">#38</span><span data-i18n="rk_you">You</span><span class="rw">▲ 4</span></div>
           <div class="rung"><span class="pos">#100</span><span data-i18n="rk_r4">Where everyone starts</span><span class="rw">—</span></div>
         </div>
         <p class="note" style="margin-top:14px" data-i18n="rk_note">Rank opponents are computer-controlled clubs. There is no online play.</p>
@@ -718,7 +704,6 @@
         <figure class="shot"><div class="phone"><img src="assets/shot_09_corner.jpg" alt="Corner defence" loading="lazy"></div><figcaption data-i18n="s3">Corner</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_02b_cerita_dua_sisi.jpg" alt="A story scene with two characters" loading="lazy"></div><figcaption data-i18n="s4">The story</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05b_toko_sarung.jpg" alt="Gear shop with goalkeeper gloves and their stat bonuses" loading="lazy"></div><figcaption data-i18n="s7">Goalkeeper gloves</figcaption></figure>
-        <figure class="shot"><div class="phone"><img src="assets/shot_05f_toko_kaus.jpg" alt="Gear shop with keeper kits" loading="lazy"></div><figcaption data-i18n="s5">Keeper kits</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05l_rank_menang.jpg" alt="Rank shootout won" loading="lazy"></div><figcaption data-i18n="s6">Rank win</figcaption></figure>
       </div>
     </div>
@@ -840,14 +825,13 @@
     bx2_t: "Sarung tangan bercerita", g1: "Tangan Pertama", g2: "Sekejap Mata", g3: "Cengkeram Badai",
     bx2_p: "Sembilan pasang, dibeli dengan koin dari pertandinganmu. Yang paling langka membawa jurus yang menyala saat Naluri Kiper dipakai.",
     bx3_t: "Kausmu, warnamu",
-    kg_t: "Kaus gradasi", kg_soon: "Segera hadir",
     kg1: "Racun", kg2: "Senja Merah Muda", kg3: "Hutan", kg4: "Kristal", kg5: "Fajar", kg6: "Gurun Pasir",
     s7: "Sarung tangan",
-    k1: "Biru Klub", k2: "Hitam Malam", k3: "Putih Salju", k4: "Hijau Limau", k5: "Kuning Stabilo", k6: "Ungu Senja", k7: "Merah Muda",
+    k1: "Samudra", k2: "Hitam Malam", k3: "Putih Salju", k4: "Hijau Limau", k5: "Kuning Stabilo", k6: "Ungu Senja", k7: "Merah Muda",
     bx3_p: "Hanya tampilan — kaus tidak pernah mengubah stat. Apa pun yang kamu pakai terlihat di setiap pertandingan. Ditambah hadiah harian, misi, dan enam bingkai avatar untuk dikejar.",
     rk_tag: "Sesudah chapter 2", rk_title: "Tangga Peringkat mingguan.",
     rk_lede: "Adu penalti melawan klub-klub, dari #100 sampai puncak. Kamu menendang untuk timmu dan menjaga gawang dari tendangan mereka. Tiap pekan musim ditutup, hadiah dibayar, dan tangganya dimulai lagi.",
-    rk_r1: "Juara", rk_you: "Kamu · 3 dari 3 ditepis", rk_r4: "Tempat semua orang memulai",
+    rk_r1: "Juara", rk_you: "Kamu", rk_r4: "Tempat semua orang memulai",
     rk_note: "Lawan di Peringkat adalah klub yang dikendalikan komputer. Tidak ada permainan daring.",
     gl_tag: "Dari build terbaru", gl_title: "Lihat di tanganmu.",
     s1: "Siarannya", s2: "Penalti", s3: "Sepak pojok", s4: "Ceritanya", s5: "Kaus kiper", s6: "Menang di Peringkat",
