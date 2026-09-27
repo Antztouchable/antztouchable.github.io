@@ -95,7 +95,7 @@
   .nav .wrap { display: flex; align-items: center; gap: 20px; min-height: 64px; }
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .brand img { width: 34px; height: 34px; border-radius: 8px; }
-  .brand span { font: 900 1.15rem/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .brand span { font: 900 1.15rem/1 var(--display); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
   .links { display: flex; gap: 22px; margin-left: auto; }
   .links a { text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--muted); }
   .links a:hover { color: var(--ink); }
@@ -104,7 +104,7 @@
   }
   .lang button {
     font: 700 .91rem/1 var(--pixel); letter-spacing: .1em; background: none; color: var(--faint);
-    border: 0; padding: 9px 11px; cursor: pointer;
+    border: 0; padding: 0 13px; min-height: 38px; cursor: pointer;
   }
   .lang button[aria-pressed="true"] { background: var(--cyan); color: var(--night); }
   .btn {
@@ -117,7 +117,21 @@
   .btn:hover { transform: translateY(-2px); }
   .btn.primary { background: var(--save); border-color: var(--save); color: #1b1600; }
   .btn.small { min-height: 40px; padding: 9px 16px; font-size: .88rem; }
-  .nav .btn { margin-left: 4px; }
+  /* Kontrol kanan satu kelompok, satu tinggi (40 px): bahasa, ajakan, menu. */
+  .nav-end { display: flex; align-items: center; gap: 12px; margin-left: 8px; }
+  .menu-btn {
+    display: none; place-items: center; width: 40px; height: 40px; border-radius: 10px;
+    border: 1px solid var(--line); background: transparent; cursor: pointer;
+  }
+  .menu-btn svg { width: 22px; height: 22px; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; fill: none; }
+  .menu-btn[aria-expanded="true"] { border-color: var(--cyan); }
+  .menu-panel { border-top: 1px solid var(--line); background: rgba(6, 13, 26, .97); }
+  .menu-panel .wrap { display: grid; gap: 2px; padding-block: 10px 18px; }
+  .menu-panel a:not(.btn) {
+    text-decoration: none; font-weight: 600; color: var(--muted); padding: 12px 4px;
+    border-bottom: 1px solid rgba(29, 58, 102, .5);
+  }
+  .menu-panel .btn { margin-top: 12px; }
 
   /* ── Hero ─────────────────────────────────────────────── */
   .hero {
@@ -339,22 +353,31 @@
 
   /* ── Kaki ─────────────────────────────────────────────── */
   footer { border-top: 1px solid var(--line); padding-block: 44px 34px; background: #050b16; }
-  footer .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 28px; }
+  .foot { display: grid; grid-template-columns: 1fr auto; gap: 32px 48px; align-items: center; }
+  .foot-cols { display: grid; grid-template-columns: repeat(2, minmax(150px, auto)); gap: 56px; }
   /* Lambang studio versi TRANSPARAN (kiriman pemilik proyek) — berdiri langsung
      di atas latar kaki, tanpa kotak. */
-  .studio { display: flex; align-items: center; gap: 14px; }
-  .studio > img { width: 120px; height: 120px; flex: none; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .5)); }
+  .studio { display: flex; align-items: center; gap: 20px; max-width: 480px; }
+  .studio > img { width: 128px; height: 128px; flex: none; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .5)); }
+  .studio p { color: var(--muted); font-size: 1rem; line-height: 1.55; }
   footer h4 { margin: 0 0 12px; font: 700 .94rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); text-transform: uppercase; }
   footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   footer a { color: var(--muted); text-decoration: none; }
   footer a:hover { color: var(--ink); }
-  .legal { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 20px; font-size: .82rem; color: var(--faint); display: grid; gap: 6px; }
+  .legal {
+    grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 20px; font-size: .82rem; color: var(--faint);
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px;
+  }
 
   /* ── Lebar sempit ─────────────────────────────────────── */
+  /* Panel menu tidak pernah tampil di layar lebar, walau sempat dibuka lalu
+     jendelanya diperlebar — tautannya sudah ada di bilah atas. */
+  @media (min-width: 1001px) { .menu-panel { display: none !important; } }
   @media (max-width: 1000px) {
     .ways { grid-template-columns: repeat(2, 1fr); }
     .cast { grid-template-columns: repeat(3, 1fr); }
     .links { display: none; }
+    .menu-btn { display: inline-grid; }
   }
   @media (max-width: 800px) {
     .hero .wrap, .broadcast .wrap, .rank .wrap, .squad-grid { grid-template-columns: 1fr; }
@@ -362,7 +385,8 @@
     .hero-art img { width: min(340px, 100%); }
     .road, .steps { grid-template-columns: 1fr; }
     .kit-row { grid-template-columns: repeat(4, 1fr); }
-    footer .wrap { grid-template-columns: 1fr 1fr; }
+    .foot { grid-template-columns: 1fr; }
+    .foot-cols { gap: 40px; }
     .read { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
   }
   @media (max-width: 520px) {
@@ -370,10 +394,14 @@
     .ways, .cast { grid-template-columns: 1fr 1fr; }
     .mates { grid-template-columns: repeat(4, 1fr); }
     .mate img { width: 58px; height: 58px; }
-    .nav .btn { display: none; }
+    .nav-cta { display: none; }
+    .brand span { font-size: 1rem; letter-spacing: .04em; }
+    .nav-end { gap: 8px; }
     .card { grid-template-columns: 30px 18px 1fr; font-size: .88rem; }
     .who { grid-template-rows: 150px auto; }
-    footer .wrap { grid-template-columns: 1fr; }
+    .studio > img { width: 96px; height: 96px; }
+    .foot-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .legal { flex-direction: column; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -396,11 +424,29 @@
       <a href="#rank" data-i18n="nav_rank">Rank</a>
       <a href="#faq">FAQ</a>
     </div>
-    <div class="lang" role="group" aria-label="Language">
-      <button type="button" id="lang-en" aria-pressed="true">EN</button>
-      <button type="button" id="lang-id" aria-pressed="false">ID</button>
+    <div class="nav-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-id" aria-pressed="false">ID</button>
+      </div>
+      <a class="btn small primary nav-cta" href="#tester" data-i18n="nav_cta">Join the test</a>
+      <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
-    <a class="btn small primary" href="#tester" data-i18n="nav_cta">Join the test</a>
+  </div>
+  <!-- Panel menu untuk layar sempit: di bawah 1000 px tautan di atas disembunyikan,
+       dan tanpa panel ini pengunjung HP tidak punya satu pun jalan pintas. -->
+  <div class="menu-panel" id="menu" hidden>
+    <div class="wrap">
+      <a href="#broadcast" data-i18n="nav_match">The match</a>
+      <a href="#saves" data-i18n="nav_saves">Saves</a>
+      <a href="#career" data-i18n="nav_story">Story</a>
+      <a href="#squad" data-i18n="nav_squad">Squad</a>
+      <a href="#rank" data-i18n="nav_rank">Rank</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn primary" href="#tester" data-i18n="nav_cta">Join the test</a>
+    </div>
   </div>
 </nav>
 
@@ -663,14 +709,14 @@
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap foot">
+    <!-- Satu identitas di kaki: studio. Nama game sudah ada di kepala halaman,
+         dan dua logo berdempetan terbaca sebagai dua pembuat. -->
     <div class="studio">
       <img src="assets/porogapit.png" alt="Porogapit Studio" width="256" height="256">
-      <div>
-        <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="34" height="34"><span>Be a Goalkeeper</span></a>
-        <p class="note" style="margin-top:10px" data-i18n="ft_by">A game by Porogapit Studio.</p>
-      </div>
+      <p data-i18n="ft_by">A game made with pure heart and soul by Porogapit Studio.</p>
     </div>
+    <div class="foot-cols">
     <div>
       <h4 id="follow" data-i18n="ft_follow">Follow</h4>
       <ul>
@@ -686,6 +732,7 @@
         <li><a href="#tester" data-i18n="ft_test">Become a tester</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
+    </div>
     </div>
     <div class="legal">
       <span>© <span id="year">2026</span> Porogapit Studio.</span>
@@ -760,7 +807,7 @@
     f4_q: "Perlu koneksi internet?", f4_a: "Kariermu tersimpan di HP-mu sendiri. Iklan butuh koneksi untuk dimuat — dan iklan itulah yang membuat game ini tetap gratis. Kalau kamu menikmatinya, dukung kami: kirim masukanmu, ajak teman ikut main, dan ikuti kami di <a href=\"#follow\">media sosial</a>.",
     f5_q: "Bahasa apa saja yang tersedia?", f5_a: "Bahasa Inggris dan Bahasa Indonesia, bisa diganti kapan saja di Pengaturan.",
     f6_q: "Perlu akun? Bagaimana dengan dataku?", f6_a: "Tidak perlu akun, tidak perlu mendaftar. Iklan ditayangkan oleh Google AdMob, yang memakai pengenal perangkat; di wilayah yang mewajibkannya, persetujuan iklanmu bisa ditinjau di Pengaturan. Rinciannya ada di <a href=\"https://antztouchable.github.io/privacy/id.html\">kebijakan privasi</a> kami.",
-    ft_by: "Game dari Porogapit Studio.", ft_follow: "Ikuti", ft_info: "Info", ft_priv: "Kebijakan privasi", ft_test: "Jadi penguji",
+    ft_by: "Dibuat dengan sepenuh hati dan jiwa oleh Porogapit Studio.", ft_follow: "Ikuti", ft_info: "Info", ft_priv: "Kebijakan privasi", ft_test: "Jadi penguji",
     ft_tm: "Semua klub, pemain, dan tokoh adalah fiksi. Google Play adalah merek dagang Google LLC."
   };
 
@@ -850,6 +897,17 @@
       navigator.clipboard.writeText(teks).then(ok, pilih);
     } else { pilih(); }
   });
+
+  // ── Menu layar sempit: buka/tutup, dan tertutup sendiri saat tautan dipilih.
+  var menuBtn = document.getElementById("menu-btn");
+  var menu = document.getElementById("menu");
+  function aturMenu(buka) {
+    menu.hidden = !buka;
+    menuBtn.setAttribute("aria-expanded", buka ? "true" : "false");
+  }
+  menuBtn.addEventListener("click", function () { aturMenu(menu.hidden); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) aturMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") aturMenu(false); });
 
   document.getElementById("lang-en").addEventListener("click", function () { pasangBahasa("en"); });
   document.getElementById("lang-id").addEventListener("click", function () { pasangBahasa("id"); });
