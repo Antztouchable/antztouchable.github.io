@@ -13,7 +13,7 @@
 <link rel="icon" href="assets/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=Silkscreen:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800;900&display=swap">
 <style>
   /* Satu dunia visual saja: stadion malam, seperti splash game. Tidak ada tema
      terang — warnanya dicat eksplisit supaya halaman berdiri di latar apa pun. */
@@ -31,9 +31,11 @@
     --ink: #eef3fa;
     --muted: #9fb0c8;
     --faint: #6f83a3;
-    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    /* SATU keluarga huruf — permintaan pemilik proyek 2026-09-27 ("bisakah font
+       dibuat seragam?"). Barlow Condensed untuk judul dan label, Barlow untuk teks. */
+    --display: "Barlow Condensed", "Arial Narrow", sans-serif;
     --body: "Barlow", "Segoe UI", system-ui, sans-serif;
-    --pixel: "Silkscreen", "Courier New", monospace;
+    --pixel: "Barlow Condensed", "Arial Narrow", sans-serif;
     --wrap: min(1140px, 100% - 32px);
   }
 
@@ -59,7 +61,7 @@
   .lede { color: var(--muted); max-width: 62ch; font-size: 1.08rem; }
 
   .tag {
-    font: 700 .72rem/1 var(--pixel);
+    font: 700 .94rem/1 var(--pixel);
     letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--cyan);
@@ -88,7 +90,7 @@
     display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden;
   }
   .lang button {
-    font: 700 .7rem/1 var(--pixel); letter-spacing: .1em; background: none; color: var(--faint);
+    font: 700 .91rem/1 var(--pixel); letter-spacing: .1em; background: none; color: var(--faint);
     border: 0; padding: 9px 11px; cursor: pointer;
   }
   .lang button[aria-pressed="true"] { background: var(--cyan); color: var(--night); }
@@ -124,7 +126,7 @@
   .cta { display: flex; flex-wrap: wrap; gap: 12px; }
   .facts { display: flex; flex-wrap: wrap; gap: 8px; }
   .facts span {
-    font: 700 .68rem/1 var(--pixel); letter-spacing: .1em; text-transform: uppercase;
+    font: 700 .88rem/1 var(--pixel); letter-spacing: .1em; text-transform: uppercase;
     color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px;
   }
   .hero-art {
@@ -133,12 +135,13 @@
     display: flex; align-items: flex-end; justify-content: center;
   }
   .hero-art img {
-    width: min(420px, 100%);
-    /* Splash 9:16 penuh membuat hero lebih tinggi dari layar mana pun; yang
-       dipertahankan bagian atasnya — kiper, bulan, dan layar raksasa. */
-    max-height: min(78vh, 640px);
-    object-fit: cover;
-    object-position: top;
+    /* Gambar UTUH, tidak dipotong: lebarnya mengikuti tinggi layar (46vh ≈
+       82vh × 720/1279) supaya tingginya tetap muat. Versi sebelumnya memotong
+       dari atas, dan di layar pendek yang hilang justru bola dan sarung
+       tangan — inti gambarnya. */
+    width: min(420px, 100%, 46vh);
+    height: auto;
+    aspect-ratio: 720 / 1279;
     /* Bingkai UTUH di keempat sisi. Dulu bawahnya terbuka dan gambar menempel
        ke tepi bagian berikutnya — sudut atas membulat, bawah terpotong rata. */
     border-radius: 22px;
@@ -149,7 +152,7 @@
     position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
     display: flex; align-items: center; gap: 10px; white-space: nowrap;
     background: rgba(8, 20, 40, .9); border: 2px solid var(--cyan); border-radius: 10px;
-    padding: 8px 14px; font: 700 .72rem/1 var(--pixel); letter-spacing: .08em;
+    padding: 8px 14px; font: 700 .94rem/1 var(--pixel); letter-spacing: .08em;
     box-shadow: 0 0 24px rgba(53, 208, 255, .35);
   }
   .scorebug b { color: var(--save); font-size: .95rem; }
@@ -165,7 +168,7 @@
   .ticker-top {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     padding: 4px 6px 12px; border-bottom: 1px solid var(--line); margin-bottom: 12px;
-    font: 700 .7rem/1 var(--pixel); letter-spacing: .08em; color: var(--muted);
+    font: 700 .91rem/1 var(--pixel); letter-spacing: .08em; color: var(--muted);
   }
   .live { display: inline-flex; align-items: center; gap: 7px; color: #ff6b6b; }
   .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ff5a5a; box-shadow: 0 0 10px #ff5a5a; }
@@ -174,7 +177,7 @@
     display: grid; grid-template-columns: 38px 22px 1fr; align-items: center; gap: 10px;
     background: var(--panel-2); border: 1px solid #1a3358; border-left: 3px solid transparent;
     border-radius: 8px; padding: 11px 12px;
-    font: 400 .78rem/1.5 var(--pixel); letter-spacing: .04em; text-transform: uppercase; color: #dfe8f5;
+    font: 600 .98rem/1.45 var(--pixel); letter-spacing: .04em; text-transform: uppercase; color: #dfe8f5;
   }
   .card .min { color: var(--faint); font-size: .68rem; text-align: right; }
   .card .dot { width: 18px; height: 18px; border-radius: 50%; background: #1d3456; display: grid; place-items: center; }
@@ -206,7 +209,7 @@
   .way svg { width: 26px; height: 26px; stroke: var(--cyan); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .way h3 { font-size: 1.35rem; }
   .way p { color: var(--muted); font-size: .95rem; line-height: 1.55; }
-  .way .q { font: 700 .66rem/1.5 var(--pixel); letter-spacing: .06em; color: var(--save); text-transform: uppercase; }
+  .way .q { font: 700 .86rem/1.5 var(--pixel); letter-spacing: .06em; color: var(--save); text-transform: uppercase; }
   .read {
     margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center;
     background: linear-gradient(90deg, var(--panel), transparent); border-radius: 16px; padding: 18px 28px 18px 18px;
@@ -230,7 +233,7 @@
   }
   .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 56px; }
   .stop { border-top: 3px solid var(--cyan); padding-top: 14px; display: grid; gap: 6px; }
-  .stop .n { font: 700 .7rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); }
+  .stop .n { font: 700 .91rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); }
   .stop b { font: 800 1.35rem/1.1 var(--display); text-transform: uppercase; }
   .stop p { color: var(--muted); font-size: .95rem; }
   .stop.next { border-top-color: var(--line); }
@@ -247,7 +250,7 @@
   .who span { color: var(--muted); font-size: .88rem; line-height: 1.45; }
   .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 44px; }
   .stat b { display: block; font: 900 2.8rem/1 var(--display); color: var(--save); font-variant-numeric: tabular-nums; }
-  .stat span { font: 700 .68rem/1.4 var(--pixel); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+  .stat span { font: 700 .88rem/1.4 var(--pixel); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
 
   /* ── Tim, sarung tangan, kaus ─────────────────────────── */
   .squad-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
@@ -256,17 +259,17 @@
   .mates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .mate { display: grid; gap: 6px; justify-items: center; text-align: center; }
   .mate img { width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--line); background: #0e2344; image-rendering: auto; }
-  .mate span { font: 700 .62rem/1.3 var(--pixel); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+  .mate span { font: 700 .81rem/1.3 var(--pixel); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
   .mate.paid img { border-color: var(--save); }
   .gloves { display: flex; gap: 14px; align-items: flex-end; }
   .gloves figure { margin: 0; display: grid; gap: 6px; justify-items: center; }
   .gloves img { width: 84px; }
-  .gloves figcaption { font: 700 .6rem/1.3 var(--pixel); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+  .gloves figcaption { font: 700 .78rem/1.3 var(--pixel); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: center; }
   .kits { grid-column: 1 / -1; }
   .kit-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
   .kit-row figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: #0d203e; border-radius: 12px; padding: 10px 4px 10px; border: 1px solid #16305a; }
   .kit-row img { width: 100%; max-width: 110px; }
-  .kit-row figcaption { font: 700 .58rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+  .kit-row figcaption { font: 700 .75rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
   .note { font-size: .85rem; color: var(--faint); }
 
   /* ── Rank ─────────────────────────────────────────────── */
@@ -275,7 +278,7 @@
   .rung {
     display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 12px;
     background: var(--navy); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
-    font: 700 .74rem/1 var(--pixel); letter-spacing: .06em; text-transform: uppercase;
+    font: 700 .96rem/1 var(--pixel); letter-spacing: .06em; text-transform: uppercase;
   }
   .rung .pos { color: var(--faint); font-variant-numeric: tabular-nums; }
   .rung .rw { color: var(--cyan); }
@@ -291,7 +294,7 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
   }
   .phone img { border-radius: 19px; aspect-ratio: 420 / 852; width: 100%; object-fit: cover; }
-  .shot figcaption { font: 700 .66rem/1.4 var(--pixel); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; text-align: center; }
+  .shot figcaption { font: 700 .86rem/1.4 var(--pixel); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; text-align: center; }
 
   /* ── Penguji ──────────────────────────────────────────── */
   .tester { text-align: center; background: radial-gradient(60% 80% at 50% 0%, rgba(250, 209, 10, .12), transparent 70%), var(--night); }
@@ -300,13 +303,13 @@
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; max-width: 900px; margin-block: 10px; text-align: left; }
   .steps li { list-style: none; background: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; color: var(--muted); font-size: .95rem; }
   .steps li b { display: block; color: var(--ink); font: 800 1.15rem/1.1 var(--display); text-transform: uppercase; margin-bottom: 6px; }
-  .steps li i { font-style: normal; font: 700 .66rem/1 var(--pixel); color: var(--save); letter-spacing: .1em; display: block; margin-bottom: 10px; }
+  .steps li i { font-style: normal; font: 700 .86rem/1 var(--pixel); color: var(--save); letter-spacing: .1em; display: block; margin-bottom: 10px; }
   .mail {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;
     background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 10px 10px 18px;
   }
   .mail code { font: 700 1rem/1 var(--body); color: var(--ink); user-select: all; }
-  .copied { font: 700 .66rem/1 var(--pixel); color: var(--save); letter-spacing: .08em; min-height: 1em; }
+  .copied { font: 700 .86rem/1 var(--pixel); color: var(--save); letter-spacing: .08em; min-height: 1em; }
 
   /* ── FAQ ──────────────────────────────────────────────── */
   .faq { display: grid; gap: 10px; max-width: 860px; }
@@ -316,7 +319,7 @@
     display: flex; justify-content: space-between; gap: 14px;
   }
   summary::-webkit-details-marker { display: none; }
-  summary::after { content: "+"; font: 700 1.1rem/1 var(--pixel); color: var(--cyan); }
+  summary::after { content: "+"; font: 700 1.43rem/1 var(--pixel); color: var(--cyan); }
   details[open] summary::after { content: "–"; }
   details p { padding: 0 20px 18px; color: var(--muted); }
   details a { color: var(--cyan); }
@@ -324,7 +327,7 @@
   /* ── Kaki ─────────────────────────────────────────────── */
   footer { border-top: 1px solid var(--line); padding-block: 44px 34px; background: #050b16; }
   footer .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 28px; }
-  footer h4 { margin: 0 0 12px; font: 700 .72rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); text-transform: uppercase; }
+  footer h4 { margin: 0 0 12px; font: 700 .94rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); text-transform: uppercase; }
   footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   footer a { color: var(--muted); text-decoration: none; }
   footer a:hover { color: var(--ink); }
@@ -351,7 +354,7 @@
     .mates { grid-template-columns: repeat(4, 1fr); }
     .mate img { width: 58px; height: 58px; }
     .nav .btn { display: none; }
-    .card { grid-template-columns: 30px 18px 1fr; font-size: .7rem; }
+    .card { grid-template-columns: 30px 18px 1fr; font-size: .88rem; }
     .who { grid-template-rows: 150px auto; }
     footer .wrap { grid-template-columns: 1fr; }
   }
@@ -634,7 +637,7 @@
         <details><summary data-i18n="f1_q">How much does it cost?</summary><p data-i18n="f1_a">Nothing. The game is free to play and contains ads. There are no in-app purchases: coins, gems, gloves, kits and team-mates are all earned by playing.</p></details>
         <details><summary data-i18n="f2_q">Which phones can play it?</summary><p data-i18n="f2_a">Android phones. It starts as a closed test on Google Play, followed by a public release.</p></details>
         <details><summary data-i18n="f3_q">Is there online multiplayer?</summary><p data-i18n="f3_a">No. The weekly Rank ladder is played against computer-controlled club sides. Your career is yours alone.</p></details>
-        <details><summary data-i18n="f4_q">Do I need an internet connection?</summary><p data-i18n="f4_a">Your career is saved on your phone. Ads need a connection to load.</p></details>
+        <details><summary data-i18n="f4_q">Do I need an internet connection?</summary><p data-i18n="f4_a">Your career is saved on your phone. Ads need a connection to load — and those ads are what keep the game free. If you enjoy it, support us: tell us what you think, bring a friend into the game, and follow us on <a href="#follow">social media</a>.</p></details>
         <details><summary data-i18n="f5_q">Which languages are included?</summary><p data-i18n="f5_a">English and Bahasa Indonesia, switchable any time in Settings.</p></details>
         <details><summary data-i18n="f6_q">Do I need an account? What about my data?</summary><p data-i18n="f6_a">No account, no sign-up. Ads are served by Google AdMob, which uses a device identifier; where the law requires it, you can review your ad consent in Settings. The full details are in our <a href="https://antztouchable.github.io/privacy/">privacy policy</a>.</p></details>
       </div>
@@ -649,7 +652,7 @@
       <p class="note" style="margin-top:12px" data-i18n="ft_by">A game by Porogapit Studio.</p>
     </div>
     <div>
-      <h4 data-i18n="ft_follow">Follow</h4>
+      <h4 id="follow" data-i18n="ft_follow">Follow</h4>
       <ul>
         <li><a href="https://www.facebook.com/profile.php?id=100082757384889" rel="noopener">Facebook</a></li>
         <li><a href="https://www.instagram.com/porogapitstudio/" rel="noopener">Instagram</a></li>
@@ -734,7 +737,7 @@
     f1_q: "Berapa harganya?", f1_a: "Gratis. Game ini bisa dimainkan tanpa bayar dan memuat iklan. Tidak ada pembelian dalam aplikasi: koin, gems, sarung tangan, kaus, dan rekan setim semuanya didapat dari bermain.",
     f2_q: "HP apa yang bisa memainkannya?", f2_a: "HP Android. Dimulai sebagai uji coba tertutup di Google Play, lalu rilis publik.",
     f3_q: "Ada mode multipemain daring?", f3_a: "Tidak. Tangga Peringkat mingguan dimainkan melawan klub yang dikendalikan komputer. Kariermu milikmu sendiri.",
-    f4_q: "Perlu koneksi internet?", f4_a: "Kariermu tersimpan di HP-mu sendiri. Iklan butuh koneksi untuk dimuat.",
+    f4_q: "Perlu koneksi internet?", f4_a: "Kariermu tersimpan di HP-mu sendiri. Iklan butuh koneksi untuk dimuat — dan iklan itulah yang membuat game ini tetap gratis. Kalau kamu menikmatinya, dukung kami: kirim masukanmu, ajak teman ikut main, dan ikuti kami di <a href=\"#follow\">media sosial</a>.",
     f5_q: "Bahasa apa saja yang tersedia?", f5_a: "Bahasa Inggris dan Bahasa Indonesia, bisa diganti kapan saja di Pengaturan.",
     f6_q: "Perlu akun? Bagaimana dengan dataku?", f6_a: "Tidak perlu akun, tidak perlu mendaftar. Iklan ditayangkan oleh Google AdMob, yang memakai pengenal perangkat; di wilayah yang mewajibkannya, persetujuan iklanmu bisa ditinjau di Pengaturan. Rinciannya ada di <a href=\"https://antztouchable.github.io/privacy/id.html\">kebijakan privasi</a> kami.",
     ft_by: "Game dari Porogapit Studio.", ft_follow: "Ikuti", ft_info: "Info", ft_priv: "Kebijakan privasi", ft_test: "Jadi penguji",
