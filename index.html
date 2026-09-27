@@ -258,6 +258,11 @@
       url("assets/story_bg.jpg") center 30% / cover no-repeat;
     opacity: .9;
   }
+  .synopsis {
+    display: grid; gap: 14px; max-width: 68ch; margin: -12px 0 48px;
+    padding: 4px 0 4px 22px; border-left: 3px solid var(--save);
+  }
+  .synopsis p { color: #d3deee; font-size: 1.08rem; line-height: 1.7; }
   .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 56px; }
   .stop { border-top: 3px solid var(--cyan); padding-top: 14px; display: grid; gap: 6px; }
   .stop .n { font: 700 .91rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); }
@@ -280,24 +285,39 @@
   .stat span { font: 700 .88rem/1.4 var(--pixel); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
 
   /* ── Tim, sarung tangan, kaus ─────────────────────────── */
-  .squad-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+  /* Tiga rak bertumpuk selebar penuh — skuad, sarung tangan, kaus — supaya
+     masing-masing bisa memamerkan seluruh pilihannya dalam satu baris. */
+  .squad-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
   .box { background: var(--navy); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 14px; align-content: start; }
   .box p { color: var(--muted); }
-  .mates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mates { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
   .mate { display: grid; gap: 6px; justify-items: center; text-align: center; }
   .mate img { width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--line); background: #0e2344; image-rendering: auto; }
   .mate span { font: 700 .81rem/1.3 var(--pixel); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
   .mate.paid img { border-color: var(--save); }
-  .gloves { display: flex; gap: 14px; align-items: flex-end; }
-  .gloves figure { margin: 0; display: grid; gap: 6px; justify-items: center; }
-  .gloves img { width: 84px; }
-  .gloves figcaption { font: 700 .78rem/1.3 var(--pixel); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: center; }
-  .kits { grid-column: 1 / -1; }
+  .kits, .full { grid-column: 1 / -1; }
+  .glove-row { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; }
+  .glove-row figure {
+    margin: 0; display: grid; gap: 6px; justify-items: center; align-content: start; text-align: center;
+    background: #0d203e; border-radius: 12px; padding: 12px 4px; border: 1px solid #16305a; border-top: 3px solid var(--r, #e6ebf5);
+  }
+  .glove-row img { width: 100%; max-width: 84px; aspect-ratio: 1; object-fit: contain; }
+  .glove-row figcaption { display: grid; gap: 3px; }
+  .glove-row b { font: 700 .82rem/1.2 var(--pixel); color: var(--ink); letter-spacing: .03em; text-transform: uppercase; }
+  .glove-row span { font: 700 .7rem/1 var(--pixel); letter-spacing: .08em; text-transform: uppercase; color: var(--r, var(--muted)); }
+  .r0 { --r: #e6ebf5; } .r1 { --r: #8cf299; } .r2 { --r: #80c7ff; } .r3 { --r: #c78cff; } .r4 { --r: #ffd159; } .r5 { --r: #73fafa; }
   .kit-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
   .kit-row figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: #0d203e; border-radius: 12px; padding: 10px 4px 10px; border: 1px solid #16305a; }
   .kit-row img { width: 100%; max-width: 110px; }
   .kit-row figcaption { font: 700 .75rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
   .note { font-size: .85rem; color: var(--faint); }
+  .kit-sub { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .kit-sub h4 { margin: 0; font: 800 1.15rem/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+  .soon {
+    font: 700 .78rem/1 var(--pixel); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--night); background: var(--save); border-radius: 999px; padding: 5px 10px;
+  }
+  .kit-row.grad { grid-template-columns: repeat(6, 1fr); }
 
   /* ── Rank ─────────────────────────────────────────────── */
   .rank .wrap { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(28px, 6vw, 72px); align-items: center; }
@@ -384,6 +404,8 @@
     .hero-text { padding-bottom: 8px; }
     .hero-art img { width: min(340px, 100%); }
     .road, .steps { grid-template-columns: 1fr; }
+    .mates { grid-template-columns: repeat(4, 1fr); }
+    .glove-row { grid-template-columns: repeat(3, 1fr); }
     .kit-row { grid-template-columns: repeat(4, 1fr); }
     .foot { grid-template-columns: 1fr; }
     .foot-cols { gap: 40px; }
@@ -395,6 +417,7 @@
     .mates { grid-template-columns: repeat(4, 1fr); }
     .mate img { width: 58px; height: 58px; }
     .nav-cta { display: none; }
+    .kit-row.grad { grid-template-columns: repeat(3, 1fr); }
     .brand span { font-size: 1rem; letter-spacing: .04em; }
     .nav-end { gap: 8px; }
     .card { grid-template-columns: 30px 18px 1fr; font-size: .88rem; }
@@ -558,6 +581,12 @@
         <h2 data-i18n="cr_title">From a village pitch to a stadium that knows your name.</h2>
         <p class="lede" data-i18n="cr_lede">Start with a mother who thinks gloves do not pay school fees and a poster of Paffon, the keeper who made you want this. Every match moves the story, and the story is the reason the next match matters.</p>
       </div>
+      <!-- Sinopsis — setiap kalimat bersandar pada naskah game (ui.csv ST_C1_*,
+           ST_C2_*). Umur MC sengaja tidak disebut: naskahnya tidak pernah. -->
+      <div class="synopsis">
+        <p data-i18n="syn_1">A kid keeps goal on a dusty village pitch, and every night he watches the same save: Paffon, the Italian legend on his bedroom wall, three seconds at full stretch. His mother wants the gloves put away. Gloves don't pay school fees. Then the academy announces trials for Saturday. It takes one keeper.</p>
+        <p data-i18n="syn_2">From there, every step is his to fight for — a coach who doesn't hand out praise, a captain who doubts him first, a best friend who never asks for anything, and one day, a figure standing far behind the fence for the whole match, who doesn't wave and doesn't cheer. At the pro academy, it comes down to two keepers and one place.</p>
+      </div>
       <div class="road">
         <div class="stop"><span class="n">CHAPTER 1</span><b data-i18n="c1_t">The academy</b><p data-i18n="c1_p">A trial, a coach who does not hand out praise, and a place in goal you have to earn.</p></div>
         <div class="stop"><span class="n">CHAPTER 2</span><b data-i18n="c2_t">The pro academy</b><p data-i18n="c2_p">Bigger clubs, a rival keeper who is better than you, and your first reporter.</p></div>
@@ -607,12 +636,21 @@
           </div>
           <p class="note" data-i18n="bx1_n">Gold border: signed in the transfer market with gems you earn by playing. Each one arrives with a scene of their own.</p>
         </div>
-        <div class="box">
+        <!-- Rak sarung tangan PENUH, sepola rak kaus: sembilan pilihan terlalu banyak
+             untuk dipamerkan tiga. Urutan = harga di game; warna bingkai = warna
+             kelangkaan di game (SarungGambar.warna_rarity). -->
+        <div class="box full">
           <h3 data-i18n="bx2_t">Gloves with a story</h3>
-          <div class="gloves">
-            <figure><img src="assets/glove_akademi.png" alt="" loading="lazy"><figcaption data-i18n="g1">First pair</figcaption></figure>
-            <figure><img src="assets/glove_foresight.png" alt="" loading="lazy"><figcaption data-i18n="g2">Foresight</figcaption></figure>
-            <figure><img src="assets/glove_legenda.png" alt="" loading="lazy"><figcaption>Paffon Legacy</figcaption></figure>
+          <div class="glove-row">
+            <figure class="r0"><img src="assets/glove_latihan.png" alt="" loading="lazy"><figcaption><b data-i18n="g1">First Pair</b><span>Common</span></figcaption></figure>
+            <figure class="r1"><img src="assets/glove_akademi.png" alt="" loading="lazy"><figcaption><b data-i18n="g2">Blink</b><span>Uncommon</span></figcaption></figure>
+            <figure class="r1"><img src="assets/glove_compass.png" alt="" loading="lazy"><figcaption><b>Compass</b><span>Uncommon</span></figcaption></figure>
+            <figure class="r2"><img src="assets/glove_grip.png" alt="" loading="lazy"><figcaption><b data-i18n="g3">Stormgrip</b><span>Rare</span></figcaption></figure>
+            <figure class="r3"><img src="assets/glove_lentur.png" alt="" loading="lazy"><figcaption><b>Soul Catcher</b><span>Epic</span></figcaption></figure>
+            <figure class="r2"><img src="assets/glove_anchor.png" alt="" loading="lazy"><figcaption><b>Anchor</b><span>Rare</span></figcaption></figure>
+            <figure class="r4"><img src="assets/glove_komando.png" alt="" loading="lazy"><figcaption><b>Pyro Claw</b><span>Legendary</span></figcaption></figure>
+            <figure class="r2"><img src="assets/glove_foresight.png" alt="" loading="lazy"><figcaption><b>Foresight</b><span>Rare</span></figcaption></figure>
+            <figure class="r5"><img src="assets/glove_legenda.png" alt="" loading="lazy"><figcaption><b>Paffon Legacy</b><span>Mythic</span></figcaption></figure>
           </div>
           <p data-i18n="bx2_p">Nine pairs, bought with coins from your matches. The rarest carry a signature move that flares up when you use Keeper's Instinct.</p>
         </div>
@@ -626,6 +664,19 @@
             <figure><img src="assets/kit_stabilo.png" alt="" loading="lazy"><figcaption data-i18n="k5">Neon Yellow</figcaption></figure>
             <figure><img src="assets/kit_ungu.png" alt="" loading="lazy"><figcaption data-i18n="k6">Dusk Purple</figcaption></figure>
             <figure><img src="assets/kit_merahmuda.png" alt="" loading="lazy"><figcaption data-i18n="k7">Pink</figcaption></figure>
+          </div>
+          <!-- Kaus bergradasi: seni digambar pemilik proyek (mentah/keeper_ready_*.png),
+               BELUM ada di game — baru pose siap. Karena itu berlabel "segera". -->
+          <div class="kit-sub"><h4 data-i18n="kg_t">Gradient kits</h4><span class="soon" data-i18n="kg_soon">Coming soon</span></div>
+          <div class="kit-row grad">
+            <figure><img src="assets/kitg_racun.png" alt="" loading="lazy"><figcaption data-i18n="kg1">Toxic</figcaption></figure>
+            <figure><img src="assets/kitg_senja.png" alt="" loading="lazy"><figcaption data-i18n="kg2">Twilight Pink</figcaption></figure>
+            <figure><img src="assets/kitg_hutan.png" alt="" loading="lazy"><figcaption data-i18n="kg3">Forest</figcaption></figure>
+            <figure><img src="assets/kitg_kristal.png" alt="" loading="lazy"><figcaption data-i18n="kg4">Crystal</figcaption></figure>
+            <figure><img src="assets/kitg_fajar.png" alt="" loading="lazy"><figcaption data-i18n="kg5">Daybreak</figcaption></figure>
+            <!-- Pengganti oranye: oranye milik LAWAN (StadiumStage.KIT_LAWAN). Diukur
+                 di dada kaus: rona 26°, jenuh 0,51 — lawan 40°, jenuh 0,89. -->
+            <figure><img src="assets/kitg_coklat.png" alt="" loading="lazy"><figcaption data-i18n="kg6">Desert Sand</figcaption></figure>
           </div>
           <p data-i18n="bx3_p">Looks only — a kit never changes a stat. Whatever you wear shows up in every match. Add daily rewards, missions and six avatar frames to chase.</p>
         </div>
@@ -666,6 +717,7 @@
         <figure class="shot"><div class="phone"><img src="assets/shot_06d_penalty_kaus.jpg" alt="Penalty, keeper in a purple kit" loading="lazy"></div><figcaption data-i18n="s2">Penalty</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_09_corner.jpg" alt="Corner defence" loading="lazy"></div><figcaption data-i18n="s3">Corner</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_02b_cerita_dua_sisi.jpg" alt="A story scene with two characters" loading="lazy"></div><figcaption data-i18n="s4">The story</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_05b_toko_sarung.jpg" alt="Gear shop with goalkeeper gloves and their stat bonuses" loading="lazy"></div><figcaption data-i18n="s7">Goalkeeper gloves</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05f_toko_kaus.jpg" alt="Gear shop with keeper kits" loading="lazy"></div><figcaption data-i18n="s5">Keeper kits</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05l_rank_menang.jpg" alt="Rank shootout won" loading="lazy"></div><figcaption data-i18n="s6">Rank win</figcaption></figure>
       </div>
@@ -766,6 +818,8 @@
     rd_p: "Bolanya terlalu cepat untuk direaksi. Penendangnya tidak. Kaki tumpunya, pinggulnya, setengah detik sebelum ia menendang — tandanya ada di situ, dan selalu berubah. Saat butuh lebih, Naluri Kiper memperlihatkan condongnya sedikit lebih awal.",
     cr_tag: "Karier, bukan skor tertinggi", cr_title: "Dari lapangan kampung ke stadion yang tahu namamu.",
     cr_lede: "Mulai dengan ibu yang yakin sarung tangan tidak membayar uang sekolah, dan poster Paffon — kiper yang membuatmu ingin semua ini. Setiap pertandingan menggerakkan cerita, dan ceritanya yang membuat pertandingan berikutnya berarti.",
+    syn_1: "Seorang anak kampung menjaga gawang di lapangan tanah, dan tiap malam ia menatap penyelamatan yang sama: Paffon, legenda Italia di poster kamarnya, tiga detik terbang penuh. Ibunya ingin sarung tangan itu disimpan. Sarung tangan tidak membayar uang sekolah. Lalu akademi mengumumkan seleksi hari Sabtu. Hanya satu kiper yang diterima.",
+    syn_2: "Sejak itu, setiap langkah harus ia rebut sendiri — pelatih yang tidak murah memuji, kapten yang pertama meragukannya, sahabat yang tak pernah meminta apa pun, dan suatu hari, sosok yang berdiri jauh di balik pagar sepanjang laga: tidak melambai, tidak bersorak. Di akademi profesional, semuanya bermuara pada dua kiper dan satu tempat.",
     c1_t: "Akademi", c1_p: "Seleksi, pelatih yang tidak murah memuji, dan tempat di bawah mistar yang harus direbut.",
     c2_t: "Akademi profesional", c2_p: "Klub yang lebih besar, rival kiper yang memang lebih baik darimu, dan wartawan pertamamu.",
     c3_n: "BERIKUTNYA", c3_t: "Debut profesional", c3_p: "Sedang ditulis. Tuntaskan chapter 2 dan tangga Peringkat mingguan terbuka sambil menunggu.",
@@ -783,9 +837,12 @@
     sq_tag: "Bangun tim di sekitarmu", sq_title: "Rekan setim yang mengubah jalannya laga.",
     sq_lede: "Bek yang memblok tembakan sebelum sampai kepadamu. Sayap yang mengubah penyelamatanmu jadi serangan balik. Empat pemain mulai bersamamu; empat lagi menunggu di bursa transfer.",
     bx1_t: "Skuad", bx1_n: "Bingkai emas: direkrut di bursa transfer dengan gems yang didapat dari bermain. Masing-masing datang dengan adegannya sendiri.",
-    bx2_t: "Sarung tangan bercerita", g1: "Pasang pertama", g2: "Foresight",
+    bx2_t: "Sarung tangan bercerita", g1: "Tangan Pertama", g2: "Sekejap Mata", g3: "Cengkeram Badai",
     bx2_p: "Sembilan pasang, dibeli dengan koin dari pertandinganmu. Yang paling langka membawa jurus yang menyala saat Naluri Kiper dipakai.",
     bx3_t: "Kausmu, warnamu",
+    kg_t: "Kaus gradasi", kg_soon: "Segera hadir",
+    kg1: "Racun", kg2: "Senja Merah Muda", kg3: "Hutan", kg4: "Kristal", kg5: "Fajar", kg6: "Gurun Pasir",
+    s7: "Sarung tangan",
     k1: "Biru Klub", k2: "Hitam Malam", k3: "Putih Salju", k4: "Hijau Limau", k5: "Kuning Stabilo", k6: "Ungu Senja", k7: "Merah Muda",
     bx3_p: "Hanya tampilan — kaus tidak pernah mengubah stat. Apa pun yang kamu pakai terlihat di setiap pertandingan. Ditambah hadiah harian, misi, dan enam bingkai avatar untuk dikejar.",
     rk_tag: "Sesudah chapter 2", rk_title: "Tangga Peringkat mingguan.",
