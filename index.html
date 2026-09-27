@@ -307,9 +307,11 @@
   .glove-row span { font: 700 .7rem/1 var(--pixel); letter-spacing: .08em; text-transform: uppercase; color: var(--r, var(--muted)); }
   .r0 { --r: #e6ebf5; } .r1 { --r: #8cf299; } .r2 { --r: #80c7ff; } .r3 { --r: #c78cff; } .r4 { --r: #ffd159; } .r5 { --r: #73fafa; }
   .kit-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-  .kit-row figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: #0d203e; border-radius: 12px; padding: 10px 4px 10px; border: 1px solid #16305a; }
+  .kit-row figure { margin: 0; display: grid; gap: 4px; justify-items: center; background: #0d203e; border-radius: 12px; padding: 10px 4px 10px; border: 1px solid #16305a; border-top: 3px solid var(--r, #16305a); }
   .kit-row img { width: 100%; max-width: 110px; }
-  .kit-row figcaption { font: 700 .75rem/1.3 var(--pixel); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+  .kit-row figcaption { display: grid; gap: 3px; text-align: center; }
+  .kit-row figcaption b { font: 700 .82rem/1.2 var(--pixel); color: var(--ink); letter-spacing: .03em; text-transform: uppercase; }
+  .kit-row figcaption span { font: 700 .7rem/1 var(--pixel); letter-spacing: .08em; text-transform: uppercase; color: var(--r, var(--muted)); }
   .note { font-size: .85rem; color: var(--faint); }
 
   /* ── Rank ─────────────────────────────────────────────── */
@@ -648,21 +650,17 @@
         </div>
         <div class="box kits">
           <h3 data-i18n="bx3_t">Your kit, your colour</h3>
-          <!-- Keputusan pemilik proyek 2026-09-27: rak warna solid DIGANTI kaus
-               bergradasi (seni mentah/keeper_ready_*.png), kecuali biru bawaan yang
-               namanya diganti "Samudra / Ocean". ⚠️ Di GAME rak ini belum berubah:
-               kaus gradasi butuh empat lembar pose lagi per warna. Halaman ini jangan
-               di-push sebelum rak game menjual yang sama. -->
+          <!-- Urutan SAMA dengan rak game (resources/kits, v2.98): termurah/common
+               sampai termahal/rare. Garis atas = warna kelangkaan, sepola rak
+               sarung tangan di atasnya. -->
           <div class="kit-row">
-            <figure><img src="assets/kit_biru.png" alt="" loading="lazy"><figcaption data-i18n="k1">Ocean</figcaption></figure>
-            <figure><img src="assets/kitg_racun.png" alt="" loading="lazy"><figcaption data-i18n="kg1">Toxic</figcaption></figure>
-            <figure><img src="assets/kitg_senja.png" alt="" loading="lazy"><figcaption data-i18n="kg2">Twilight Pink</figcaption></figure>
-            <figure><img src="assets/kitg_hutan.png" alt="" loading="lazy"><figcaption data-i18n="kg3">Forest</figcaption></figure>
-            <figure><img src="assets/kitg_kristal.png" alt="" loading="lazy"><figcaption data-i18n="kg4">Crystal</figcaption></figure>
-            <figure><img src="assets/kitg_fajar.png" alt="" loading="lazy"><figcaption data-i18n="kg5">Daybreak</figcaption></figure>
-            <!-- Pengganti oranye: oranye milik LAWAN (StadiumStage.KIT_LAWAN). Diukur
-                 di dada kaus: rona 26°, jenuh 0,51 — lawan 40°, jenuh 0,89. -->
-            <figure><img src="assets/kitg_coklat.png" alt="" loading="lazy"><figcaption data-i18n="kg6">Desert Sand</figcaption></figure>
+            <figure class="r0"><img src="assets/kit_biru.png" alt="" loading="lazy"><figcaption><b data-i18n="k1">Ocean</b><span data-i18n="kf">Starter</span></figcaption></figure>
+            <figure class="r0"><img src="assets/kitg_kristal.png" alt="" loading="lazy"><figcaption><b data-i18n="kg4">Crystal</b><span>Common</span></figcaption></figure>
+            <figure class="r0"><img src="assets/kitg_coklat.png" alt="" loading="lazy"><figcaption><b data-i18n="kg6">Desert Sand</b><span>Common</span></figcaption></figure>
+            <figure class="r1"><img src="assets/kitg_fajar.png" alt="" loading="lazy"><figcaption><b data-i18n="kg5">Daybreak</b><span>Uncommon</span></figcaption></figure>
+            <figure class="r1"><img src="assets/kitg_hutan.png" alt="" loading="lazy"><figcaption><b data-i18n="kg3">Forest</b><span>Uncommon</span></figcaption></figure>
+            <figure class="r2"><img src="assets/kitg_senja.png" alt="" loading="lazy"><figcaption><b data-i18n="kg2">Twilight Pink</b><span>Rare</span></figcaption></figure>
+            <figure class="r2"><img src="assets/kitg_racun.png" alt="" loading="lazy"><figcaption><b data-i18n="kg1">Toxic</b><span>Rare</span></figcaption></figure>
           </div>
           <p data-i18n="bx3_p">Looks only — a kit never changes a stat. Whatever you wear shows up in every match. Add daily rewards, missions and six avatar frames to chase.</p>
         </div>
@@ -704,6 +702,7 @@
         <figure class="shot"><div class="phone"><img src="assets/shot_09_corner.jpg" alt="Corner defence" loading="lazy"></div><figcaption data-i18n="s3">Corner</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_02b_cerita_dua_sisi.jpg" alt="A story scene with two characters" loading="lazy"></div><figcaption data-i18n="s4">The story</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05b_toko_sarung.jpg" alt="Gear shop with goalkeeper gloves and their stat bonuses" loading="lazy"></div><figcaption data-i18n="s7">Goalkeeper gloves</figcaption></figure>
+        <figure class="shot"><div class="phone"><img src="assets/shot_05f_toko_kaus.jpg" alt="Gear shop with the gradient keeper kits, common to rare" loading="lazy"></div><figcaption data-i18n="s5">Keeper kits</figcaption></figure>
         <figure class="shot"><div class="phone"><img src="assets/shot_05l_rank_menang.jpg" alt="Rank shootout won" loading="lazy"></div><figcaption data-i18n="s6">Rank win</figcaption></figure>
       </div>
     </div>
@@ -825,7 +824,7 @@
     bx2_t: "Sarung tangan bercerita", g1: "Tangan Pertama", g2: "Sekejap Mata", g3: "Cengkeram Badai",
     bx2_p: "Sembilan pasang, dibeli dengan koin dari pertandinganmu. Yang paling langka membawa jurus yang menyala saat Naluri Kiper dipakai.",
     bx3_t: "Kausmu, warnamu",
-    kg1: "Racun", kg2: "Senja Merah Muda", kg3: "Hutan", kg4: "Kristal", kg5: "Fajar", kg6: "Gurun Pasir",
+    kf: "Bawaan", kg1: "Racun", kg2: "Senja Merah Muda", kg3: "Hutan", kg4: "Kristal", kg5: "Fajar", kg6: "Gurun Pasir",
     s7: "Sarung tangan",
     k1: "Samudra", k2: "Hitam Malam", k3: "Putih Salju", k4: "Hijau Limau", k5: "Kuning Stabilo", k6: "Ungu Senja", k7: "Merah Muda",
     bx3_p: "Hanya tampilan — kaus tidak pernah mengubah stat. Apa pun yang kamu pakai terlihat di setiap pertandingan. Ditambah hadiah harian, misi, dan enam bingkai avatar untuk dikejar.",
