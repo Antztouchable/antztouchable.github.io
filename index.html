@@ -327,6 +327,10 @@
   /* ── Kaki ─────────────────────────────────────────────── */
   footer { border-top: 1px solid var(--line); padding-block: 44px 34px; background: #050b16; }
   footer .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 28px; }
+  /* Lambang studio versi TRANSPARAN (kiriman pemilik proyek) — berdiri langsung
+     di atas latar kaki, tanpa kotak. */
+  .studio { display: flex; align-items: center; gap: 14px; }
+  .studio > img { width: 120px; height: 120px; flex: none; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .5)); }
   footer h4 { margin: 0 0 12px; font: 700 .94rem/1 var(--pixel); letter-spacing: .12em; color: var(--cyan); text-transform: uppercase; }
   footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   footer a { color: var(--muted); text-decoration: none; }
@@ -647,9 +651,12 @@
 
 <footer>
   <div class="wrap">
-    <div>
-      <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="34" height="34"><span>Be a Goalkeeper</span></a>
-      <p class="note" style="margin-top:12px" data-i18n="ft_by">A game by Porogapit Studio.</p>
+    <div class="studio">
+      <img src="assets/porogapit.png" alt="Porogapit Studio" width="256" height="256">
+      <div>
+        <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="34" height="34"><span>Be a Goalkeeper</span></a>
+        <p class="note" style="margin-top:10px" data-i18n="ft_by">A game by Porogapit Studio.</p>
+      </div>
     </div>
     <div>
       <h4 id="follow" data-i18n="ft_follow">Follow</h4>
