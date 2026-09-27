@@ -108,14 +108,14 @@
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(40px, 7vw, 90px) 0;
+    padding-block: clamp(40px, 7vw, 90px) clamp(40px, 6vw, 80px);
     background:
       radial-gradient(60% 50% at 78% 20%, rgba(53, 208, 255, .16), transparent 70%),
       radial-gradient(40% 30% at 12% 8%, rgba(250, 209, 10, .08), transparent 70%),
       linear-gradient(180deg, #060d1a 0%, #0a1830 70%, #0b2a24 100%);
   }
-  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 5vw, 64px); align-items: end; }
-  .hero-text { padding-bottom: clamp(40px, 7vw, 96px); display: grid; gap: 22px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+  .hero-text { display: grid; gap: 22px; }
   .hero-logo { width: min(460px, 100%); filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .5)); }
   .hero h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .claim { font: 800 clamp(1.7rem, 3.4vw, 2.5rem)/1.05 var(--display); text-transform: uppercase; }
@@ -139,8 +139,10 @@
     max-height: min(78vh, 640px);
     object-fit: cover;
     object-position: top;
-    border-radius: 22px 22px 0 0;
-    border: 2px solid var(--line); border-bottom: 0;
+    /* Bingkai UTUH di keempat sisi. Dulu bawahnya terbuka dan gambar menempel
+       ke tepi bagian berikutnya — sudut atas membulat, bawah terpotong rata. */
+    border-radius: 22px;
+    border: 2px solid var(--line);
     box-shadow: 0 0 0 6px rgba(53, 208, 255, .07), 0 30px 80px rgba(0, 0, 0, .6);
   }
   .scorebug {
